@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/webjars/clr__ui/clr-ui.min.css"/>
+</head>
+<body>
+
+<div th:replace="fragments/header.html :: header"></div>
+
+
+<div  style="margin-left : 1em; margin-right : auto ;" class="dox-wrapper">
+    <h1>Login</h1>
+    <p th:if="${param.error}" class="error">
+        Username or password incorrect
+    </p>
+    <form class="clr-form" method="post" action="index.html" th:action="@{/login}">
+        <clr-input-container>
+            <label>Username</label>
+            <input type="text" name="username" class="clr-input"><br>
+        </clr-input-container>
+        <clr-password-container>
+            <label>Password</label>
+            <input type="password" name="password" class="clr-input"><br>
+        </clr-password-container>
+        <button class="btn btn-primary" type="submit">Login</button>
+    </form>
+</div>
+
+</body>
+</html>

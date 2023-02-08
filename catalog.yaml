@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: twitter-demo-catalog
+  description: twitter-demo-catalog
+  tags:
+    - app-accelerator
+    - java
+    - spring
+    - web
+    - tanzu
+  annotations:
+    'backstage.io/kubernetes-label-selector': 'app.kubernetes.io/part-of=twitter-demo'
+spec:
+  type: service
+  lifecycle: experimental
+  owner: default-team

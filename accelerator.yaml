@@ -1,0 +1,51 @@
+accelerator:
+  displayName: Twitter Wordcloud Demo
+  description: A app to create a wordcloud based on tweets
+  iconUrl: https://raw.githubusercontent.com/tanzu-japan/twitter-wordcloud-demo/main/img/pic1.png
+  tags:
+    - java
+    - spring
+    - cloud
+    - wavefront
+    - tanzu
+    - twitter
+  # options for the UI
+  options:
+    - name: appName
+      inputType: text
+      label: app name of app
+      description: app name
+      defaultValue: wordcloud
+      required: true
+    - name: hashTags
+      inputType: text
+      label: Hash tags to search
+      description: Hash tags to search (e.g. #hoge)
+      required: true
+    - name: twitterBearerToken
+      inputType: text
+      label: Twitter API bearer token (e.g. AAAA...BSufQEAAAAAp9W...)
+      required: true
+
+engine:
+  merge:
+    - include: [ "**" ]
+      exclude: [ "wordcloud/src/main/resources/application.properties", "Tiltfile" ]
+    - include: [ "wordcloud/src/main/resources/application.properties" ]
+      chain:
+        - type: ReplaceText
+          substitutions:
+            - text: wordcloud
+              with: "#appName"
+            - text: "#hoge"
+              with: "#hashTags"
+        - type: ReplaceText
+          substitutions:
+          - text: my-bearer-token
+            with: "#twitterBearerToken"
+    - include: ["Tiltfile" ]
+      chain:
+        - type: ReplaceText
+          substitutions:
+            - text: my-bearer-token
+              with: "#twitterBearerToken"
