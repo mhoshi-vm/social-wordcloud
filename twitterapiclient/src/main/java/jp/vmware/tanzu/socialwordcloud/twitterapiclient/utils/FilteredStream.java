@@ -3,7 +3,7 @@ package jp.vmware.tanzu.socialwordcloud.twitterapiclient.utils;
 import com.twitter.clientlib.ApiException;
 import com.twitter.clientlib.api.TweetsApi;
 import com.twitter.clientlib.model.*;
-import jp.vmware.tanzu.socialwordcloud.library.utils.TweetHandler;
+import jp.vmware.tanzu.socialwordcloud.library.utils.SocialMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +29,7 @@ public class FilteredStream implements TweetSearch {
 
 	TwitterClient twitterClient;
 
-	TweetHandler tweetHandler;
+	SocialMessageHandler socialMessageHandler;
 
 	AddRulesRequest addRulesRequest;
 
@@ -39,10 +39,10 @@ public class FilteredStream implements TweetSearch {
 
 	List<String> hashTags;
 
-	public FilteredStream(TwitterClient twitterClient, TweetHandler tweetHandler,
+	public FilteredStream(TwitterClient twitterClient, SocialMessageHandler socialMessageHandler,
 			@Value("${twitter.hashtags}") List<String> hashTags) {
 		this.twitterClient = twitterClient;
-		this.tweetHandler = tweetHandler;
+		this.socialMessageHandler = socialMessageHandler;
 		this.hashTags = hashTags;
 		this.apiInstance = twitterClient.getApiInstance();
 		this.addRulesRequest = new AddRulesRequest();
@@ -143,7 +143,7 @@ public class FilteredStream implements TweetSearch {
 					continue;
 				}
 				try {
-					tweetHandler.handle(line);
+					socialMessageHandler.handle(line);
 				}
 				catch (Exception e) {
 					e.printStackTrace();

@@ -4,9 +4,9 @@ import com.twitter.clientlib.ApiException;
 import com.twitter.clientlib.model.AddOrDeleteRulesResponse;
 import com.twitter.clientlib.model.Rule;
 import com.twitter.clientlib.model.RulesLookupResponse;
-import jp.vmware.tanzu.socialwordcloud.twitterapiclient.test_utils.TestTweetHandler;
+import jp.vmware.tanzu.socialwordcloud.twitterapiclient.test_utils.TestSocialMessageHandler;
 import jp.vmware.tanzu.socialwordcloud.twitterapiclient.test_utils.TestTwitterClient;
-import jp.vmware.tanzu.socialwordcloud.library.utils.TweetHandler;
+import jp.vmware.tanzu.socialwordcloud.library.utils.SocialMessageHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,16 +28,16 @@ class FilteredStreamTest {
 
 	TwitterClient twitterClient;
 
-	TweetHandler tweetHandler;
+	SocialMessageHandler socialMessageHandler;
 
 	List<String> hashTags = Arrays.asList("#hoge", "#foo");
 
 	@BeforeEach
 	void setup() throws ApiException {
 		twitterClient = new TestTwitterClient();
-		tweetHandler = new TestTweetHandler();
+		socialMessageHandler = new TestSocialMessageHandler();
 
-		FilteredStream spyTwitterStream = new FilteredStream(twitterClient, tweetHandler, hashTags);
+		FilteredStream spyTwitterStream = new FilteredStream(twitterClient, socialMessageHandler, hashTags);
 
 		twitterStream = Mockito.spy(spyTwitterStream);
 

@@ -1,13 +1,9 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service;
 
-import com.twitter.clientlib.model.Expansions;
-import com.twitter.clientlib.model.StreamingTweetResponse;
-import com.twitter.clientlib.model.Tweet;
-import com.twitter.clientlib.model.User;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageRepository;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageTextRepository;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.utils.MorphologicalAnalysis;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.MyTweet;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.MyTweetRepository;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.TweetTextRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,64 +14,52 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
-class TweetStreamServiceTest {
+class SocialMessageStreamServiceTest {
 
 	private final MorphologicalAnalysis morphologicalAnalysis = new MorphologicalAnalysis();
 
-	TweetStreamService tweetStreamService;
+	SocialMessageStreamService socialMessageStreamService;
 
-	TweetStreamService spyTweetStreamService;
-
-	@Autowired
-	private MyTweetRepository myTweetRepository;
+	SocialMessageStreamService spySocialMessageStreamService;
 
 	@Autowired
-	private TweetTextRepository tweetTextRepository;
+	private SocialMessageRepository socialMessageRepository;
+
+	@Autowired
+	private SocialMessageTextRepository socialMessageTextRepository;
 
 	@BeforeEach
 	void setup() {
-		this.tweetStreamService = new TweetStreamService(myTweetRepository, tweetTextRepository, morphologicalAnalysis,
+		this.socialMessageStreamService = new SocialMessageStreamService(socialMessageRepository, socialMessageTextRepository, morphologicalAnalysis,
 				"ja");
 
-		this.spyTweetStreamService = Mockito.spy(tweetStreamService);
+		this.spySocialMessageStreamService = Mockito.spy(socialMessageStreamService);
 
 	}
 
 	@Test
 	void normalCase() throws IOException, InterruptedException {
 
-		Tweet dummyTweet = new Tweet();
-		dummyTweet.setId("111");
-		dummyTweet.setText("This is test tweet");
-		dummyTweet.setLang("ja");
+		SocialMessage socialMessage = new SocialMessage();
+		socialMessage.setMessageId("111");
+		socialMessage.setContext("This is test tweet");
+		socialMessage.setLang("ja");
+		socialMessage.setUsername("Jannie");
 
-		User dummyUser = new User();
-		dummyUser.setUsername("Jannie");
-		List<User> dummyUsers = new ArrayList<>();
-		dummyUsers.add(dummyUser);
+		Mockito.doReturn(socialMessage).when(spySocialMessageStreamService).setSocialMessage(Mockito.any());
 
-		Expansions expansions = new Expansions();
-		expansions.setUsers(dummyUsers);
+		spySocialMessageStreamService.handler("this is test");
 
-		StreamingTweetResponse streamingTweetResponse = new StreamingTweetResponse();
-		streamingTweetResponse.setData(dummyTweet);
-		streamingTweetResponse.setIncludes(expansions);
+		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByMessageIdDesc();
+		assertEquals(1, socialMessages.size());
 
-		Mockito.doReturn(streamingTweetResponse).when(spyTweetStreamService).setStreamTweetResponse(Mockito.any());
-
-		spyTweetStreamService.handler("this is test");
-
-		List<MyTweet> myTweets = myTweetRepository.findAllByOrderByTweetIdDesc();
-		assertEquals(1, myTweets.size());
-
-		List<TweetTextRepository.TextCount> textCounts = tweetTextRepository.listTextCount(Pageable.ofSize(10));
+		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository.listTextCount(Pageable.ofSize(10));
 		assertEquals("This", textCounts.get(0).getText());
 		assertEquals(1, textCounts.get(0).getSize());
 		assertEquals("is", textCounts.get(1).getText());
@@ -88,53 +72,43 @@ class TweetStreamServiceTest {
 
 	@Test
 	void returnWhenLineIsEmpty() throws IOException, InterruptedException {
-		spyTweetStreamService.handler("");
+		spySocialMessageStreamService.handler("");
 
-		List<MyTweet> myTweets = myTweetRepository.findAllByOrderByTweetIdDesc();
-		assertEquals(0, myTweets.size());
+		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByMessageIdDesc();
+		assertEquals(0, socialMessages.size());
 
-		List<TweetTextRepository.TextCount> textCounts = tweetTextRepository.listTextCount(Pageable.ofSize(10));
+		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository.listTextCount(Pageable.ofSize(10));
 		assertEquals(0, textCounts.size());
 	}
 
 	@Test
 	void doNothingOnNonJson() throws IOException, InterruptedException {
-		spyTweetStreamService.handler("dd");
+		spySocialMessageStreamService.handler("dd");
 
-		List<MyTweet> myTweets = myTweetRepository.findAllByOrderByTweetIdDesc();
-		assertEquals(0, myTweets.size());
+		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByMessageIdDesc();
+		assertEquals(0, socialMessages.size());
 
-		List<TweetTextRepository.TextCount> textCounts = tweetTextRepository.listTextCount(Pageable.ofSize(10));
+		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository.listTextCount(Pageable.ofSize(10));
 		assertEquals(0, textCounts.size());
 	}
 
 	@Test
 	void skipHashTagAndUsername() throws IOException, InterruptedException {
-		Tweet dummyTweet = new Tweet();
-		dummyTweet.setId("111");
-		dummyTweet.setText("#hoge_foo #foo_bar This is !$ test tweet");
-		dummyTweet.setLang("ja");
 
-		User dummyUser = new User();
-		dummyUser.setUsername("Jannie");
-		List<User> dummyUsers = new ArrayList<>();
-		dummyUsers.add(dummyUser);
+		SocialMessage socialMessage = new SocialMessage();
+		socialMessage.setMessageId("111");
+		socialMessage.setContext("#hoge_foo #foo_bar This is !$ test tweet");
+		socialMessage.setLang("ja");
+		socialMessage.setUsername("Jannie");
 
-		Expansions expansions = new Expansions();
-		expansions.setUsers(dummyUsers);
+		Mockito.doReturn(socialMessage).when(spySocialMessageStreamService).setSocialMessage(Mockito.any());
 
-		StreamingTweetResponse streamingTweetResponse = new StreamingTweetResponse();
-		streamingTweetResponse.setData(dummyTweet);
-		streamingTweetResponse.setIncludes(expansions);
+		spySocialMessageStreamService.handler("this is test");
 
-		Mockito.doReturn(streamingTweetResponse).when(spyTweetStreamService).setStreamTweetResponse(Mockito.any());
+		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByMessageIdDesc();
+		assertEquals(1, socialMessages.size());
 
-		spyTweetStreamService.handler("this is test");
-
-		List<MyTweet> myTweets = myTweetRepository.findAllByOrderByTweetIdDesc();
-		assertEquals(1, myTweets.size());
-
-		List<TweetTextRepository.TextCount> textCounts = tweetTextRepository.listTextCount(Pageable.ofSize(10));
+		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository.listTextCount(Pageable.ofSize(10));
 		assertEquals("This", textCounts.get(0).getText());
 		assertEquals(1, textCounts.get(0).getSize());
 		assertEquals("is", textCounts.get(1).getText());

@@ -1,8 +1,8 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service;
 
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.utils.MorphologicalAnalysis;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.MyTweetRepository;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.TweetTextRepository;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageRepository;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageTextRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -11,21 +11,21 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
-class TweetStreamServiceRollbackTest {
+class SocialMessageStreamServiceRollbackTest {
 
 	private final MorphologicalAnalysis morphologicalAnalysis = new MorphologicalAnalysis();
 
-	TweetStreamService tweetStreamService;
+	SocialMessageStreamService socialMessageStreamService;
 
-	TweetStreamService spyTweetStreamService;
+	SocialMessageStreamService spySocialMessageStreamService;
 
 	@Autowired
-	private MyTweetRepository myTweetRepository;
+	private SocialMessageRepository socialMessageRepository;
 
 	@Mock
-	private TweetTextRepository tweetTextRepository;
+	private SocialMessageTextRepository socialMessageTextRepository;
 
-	private TweetTextRepository spyTweetTextRepository;
+	private SocialMessageTextRepository spySocialMessageTextRepository;
 
 	// https://stackoverflow.com/questions/58443290/why-doesnt-my-transactional-method-rollback-when-testing
 

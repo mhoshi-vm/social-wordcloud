@@ -1,6 +1,6 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller;
 
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.TweetStreamService;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageStreamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -9,14 +9,14 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @ConditionalOnProperty(value = "message.queue.enabled", havingValue = "true")
-public class TweetMQController {
+public class SocialMessageMQController {
 
-	private static final Logger logger = LoggerFactory.getLogger(TweetMQController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SocialMessageMQController.class);
 
-	TweetStreamService tweetStreamService;
+	SocialMessageStreamService socialMessageStreamService;
 
-	public TweetMQController(TweetStreamService tweetStreamService) {
-		this.tweetStreamService = tweetStreamService;
+	public SocialMessageMQController(SocialMessageStreamService socialMessageStreamService) {
+		this.socialMessageStreamService = socialMessageStreamService;
 	}
 
 	@RabbitListener(queues = "${message.queue.queue}")
@@ -24,14 +24,14 @@ public class TweetMQController {
 		logger.debug("Queue Received : " + tweet);
 		if (!tweet.isEmpty()) {
 			logger.debug("Queue Processing");
-			tweetStreamService.handler(tweet);
+			socialMessageStreamService.handler(tweet);
 		}
 	}
 
 	@RabbitListener(queues = "#{mvcMQConfiguration.getNotificationQueue()}")
 	public void notificationHandle(String tweet) {
 		logger.debug("Queue Received : " + tweet);
-		tweetStreamService.notifyTweetEvent(tweet);
+		socialMessageStreamService.notifyTweetEvent(tweet);
 	}
 
 }

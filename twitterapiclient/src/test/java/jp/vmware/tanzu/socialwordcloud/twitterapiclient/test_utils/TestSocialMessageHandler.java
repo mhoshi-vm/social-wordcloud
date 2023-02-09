@@ -1,6 +1,6 @@
 package jp.vmware.tanzu.socialwordcloud.twitterapiclient.test_utils;
 
-import jp.vmware.tanzu.socialwordcloud.library.utils.TweetHandler;
+import jp.vmware.tanzu.socialwordcloud.library.utils.SocialMessageHandler;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @Primary
-public class TestTweetHandler implements TweetHandler {
+public class TestSocialMessageHandler implements SocialMessageHandler {
 
 	List<String> tweets = new ArrayList<>();
 

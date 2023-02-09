@@ -9,7 +9,7 @@ import com.twitter.clientlib.api.TweetsApi;
 import com.twitter.clientlib.model.Expansions;
 import com.twitter.clientlib.model.Get2TweetsSearchRecentResponse;
 import com.twitter.clientlib.model.Tweet;
-import jp.vmware.tanzu.socialwordcloud.library.utils.TweetHandler;
+import jp.vmware.tanzu.socialwordcloud.library.utils.SocialMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +29,7 @@ public class IntervalSearch implements TweetSearch {
 
 	TwitterClient twitterClient;
 
-	TweetHandler tweetHandler;
+	SocialMessageHandler socialMessageHandler;
 
 	TweetsApi apiInstance;
 
@@ -43,10 +43,10 @@ public class IntervalSearch implements TweetSearch {
 
 	String sortOrder = "recency";
 
-	public IntervalSearch(TwitterClient twitterClient, TweetHandler tweetHandler,
+	public IntervalSearch(TwitterClient twitterClient, SocialMessageHandler socialMessageHandler,
 			@Value("${twitter.hashtags}") List<String> hashTags) {
 		this.twitterClient = twitterClient;
-		this.tweetHandler = tweetHandler;
+		this.socialMessageHandler = socialMessageHandler;
 		this.hashTags = hashTags;
 		this.apiInstance = twitterClient.getApiInstance();
 		setStartTime(OffsetDateTime.now());
@@ -85,6 +85,7 @@ public class IntervalSearch implements TweetSearch {
 		ArrayNode usersNode = mapper.createArrayNode();
 		ObjectNode nullNode = mapper.createObjectNode();
 
+		jNode.put("origin", "twitter");
 		jNode.set("data", nullNode);
 		jNode.set("includes", nullNode);
 
@@ -124,7 +125,7 @@ public class IntervalSearch implements TweetSearch {
 				result.getData().forEach(tweet -> {
 					try {
 						logger.info("Found tweet ");
-						tweetHandler.handle(createJson(tweet, result.getIncludes()).toString());
+						socialMessageHandler.handle(createJson(tweet, result.getIncludes()).toString());
 						if (result.getMeta() != null) {
 							setStartTime(null);
 							setSinceId(result.getMeta().getNewestId());

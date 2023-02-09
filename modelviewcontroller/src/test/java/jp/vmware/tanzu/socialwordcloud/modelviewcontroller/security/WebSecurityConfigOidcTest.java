@@ -1,10 +1,10 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.security;
 
 import jp.vmware.tanzu.socialwordcloud.library.observability.WfServletSpans;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.TweetMQController;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.SocialMessageMQController;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.WebSocketEventController;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.MyTweetService;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.TweetTextService;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageService;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageTextService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,10 +24,10 @@ class WebSecurityConfigOidcTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private MyTweetService myTweetService;
+	private SocialMessageService socialMessageService;
 
 	@MockBean
-	private TweetTextService tweetTextService;
+	private SocialMessageTextService socialMessageTextService;
 
 	// Silent WfServletBean
 	@MockBean
@@ -35,7 +35,7 @@ class WebSecurityConfigOidcTest {
 
 	// Silent TweetMQ
 	@MockBean
-	private TweetMQController tweetMQController;
+	private SocialMessageMQController socialMessageMQController;
 
 	@MockBean
 	private WebSocketEventController webSocketEventController;

@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = "jp.vmware.tanzu.socialwordcloud")
-public class TwitterAPiClientApplication {
+public class TwitterAPIClientApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TwitterAPiClientApplication.class, args);
+		SpringApplication.run(TwitterAPIClientApplication.class, args);
 	}
 
 }

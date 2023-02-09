@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @TestPropertySource(properties = { "test=true" })
 @SpringBootTest(classes = TestConfig.class)
-class TweetHandlerMQTest {
+class SocialMessageHandlerMQTest {
 
 	@Autowired
 	private TestRabbitTemplate template;

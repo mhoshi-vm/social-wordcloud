@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "message.queue.enabled", havingValue = "false", matchIfMissing = true)
-public class TweetHandlerLog implements TweetHandler {
+public class SocialMessageHandlerLog implements SocialMessageHandler {
 
 	@Override
 	public void handle(String tweet) {

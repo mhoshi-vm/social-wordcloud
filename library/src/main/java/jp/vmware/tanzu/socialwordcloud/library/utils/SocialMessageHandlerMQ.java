@@ -9,15 +9,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "message.queue.enabled", havingValue = "true")
-public class TweetHandlerMQ implements TweetHandler {
+public class SocialMessageHandlerMQ implements SocialMessageHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(TweetHandlerMQ.class);
+	private static final Logger logger = LoggerFactory.getLogger(SocialMessageHandlerMQ.class);
 
 	public String exchangeName;
 
 	RabbitTemplate rabbitTemplate;
 
-	public TweetHandlerMQ(RabbitTemplate rabbitTemplate, @Value("${message.queue.exchange}") String exchangeName) {
+	public SocialMessageHandlerMQ(RabbitTemplate rabbitTemplate, @Value("${message.queue.exchange}") String exchangeName) {
 		this.rabbitTemplate = rabbitTemplate;
 		this.exchangeName = exchangeName;
 	}

@@ -2,7 +2,7 @@ package jp.vmware.tanzu.socialwordcloud.library.observability;
 
 import brave.handler.MutableSpan;
 import jp.vmware.tanzu.socialwordcloud.library.test_utils.TestSpanHolder;
-import jp.vmware.tanzu.socialwordcloud.library.utils.TweetHandler;
+import jp.vmware.tanzu.socialwordcloud.library.utils.SocialMessageHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class WfSpansTest {
 
 	@Autowired
-	TweetHandler tweetHandler;
+    SocialMessageHandler socialMessageHandler;
 
 	@Autowired
 	TestRestTemplate testRestTemplate;
@@ -44,7 +44,7 @@ class WfSpansTest {
 
 	@Test
 	void checkATweetHandlerSpans() throws IOException, InterruptedException {
-		tweetHandler.handle("");
+		socialMessageHandler.handle("");
 
 		spans = testSpanHolder.getSpans();
 

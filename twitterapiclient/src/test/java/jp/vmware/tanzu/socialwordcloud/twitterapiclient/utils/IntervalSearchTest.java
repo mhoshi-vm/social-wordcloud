@@ -4,7 +4,7 @@ import com.twitter.clientlib.ApiException;
 import com.twitter.clientlib.model.Get2TweetsSearchAllResponseMeta;
 import com.twitter.clientlib.model.Get2TweetsSearchRecentResponse;
 import com.twitter.clientlib.model.Tweet;
-import jp.vmware.tanzu.socialwordcloud.twitterapiclient.test_utils.TestTweetHandler;
+import jp.vmware.tanzu.socialwordcloud.twitterapiclient.test_utils.TestSocialMessageHandler;
 import jp.vmware.tanzu.socialwordcloud.twitterapiclient.test_utils.TestTwitterClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,14 +27,14 @@ class IntervalSearchTest {
 
 	TwitterClient twitterClient;
 
-	TestTweetHandler tweetHandler;
+	TestSocialMessageHandler tweetHandler;
 
 	List<String> hashTags = Arrays.asList("#hoge", "#foo");
 
 	@BeforeEach
 	void setup() throws ApiException {
 		twitterClient = new TestTwitterClient();
-		tweetHandler = new TestTweetHandler();
+		tweetHandler = new TestSocialMessageHandler();
 
 		IntervalSearch spyTwitterStream = new IntervalSearch(twitterClient, tweetHandler, hashTags);
 

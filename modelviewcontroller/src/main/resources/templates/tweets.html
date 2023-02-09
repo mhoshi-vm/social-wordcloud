@@ -23,14 +23,16 @@
         </thead>
         <tbody>
         <tr th:each="tweet: ${tweets}">
-            <td class="left" th:text="${tweet.tweetId}"></td>
-            <td class="left" th:text="${tweet.text}"></td>
+            <td class="left" th:text="${tweet.messageId}"></td>
+            <td class="left" th:text="${tweet.origin}"></td>
+            <td class="left" th:text="${tweet.context}"></td>
             <td class="left" th:text="${tweet.username}"></td>
             <td class="left" th:text="${tweet.createDateTime}"></td>
             <td>
                 <form th:action="@{/tweetDelete}" th:object="${tweetDel}" method="post">
-                    <input type="hidden" name="tweetId" th:value="${tweet.tweetId}">
-                    <input type="hidden" name="text" th:value="${tweet.text}">
+                    <input type="hidden" name="messageId" th:value="${tweet.messageId}">
+                    <input type="hidden" name="origin" th:value="${tweet.origin}">
+                    <input type="hidden" name="context" th:value="${tweet.context}">
                     <input type="hidden" name="username" th:value="${tweet.username}">
                     <input type="hidden" name="createDateTime" th:value="${tweet.createDateTime}">
                     <button type="submit" class="btn btn-danger">Delete</button>

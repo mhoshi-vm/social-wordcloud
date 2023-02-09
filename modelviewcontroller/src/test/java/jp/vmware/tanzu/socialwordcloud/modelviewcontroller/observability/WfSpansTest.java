@@ -1,7 +1,7 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.observability;
 
 import brave.handler.MutableSpan;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.TweetStreamService;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageStreamService;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.test_utils.TestConfig;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.test_utils.TestSpanHolder;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class WfSpansTest {
 
 	@Autowired
-	TweetStreamService tweetStreamService;
+    SocialMessageStreamService socialMessageStreamService;
 
 	@Autowired
 	TestRestTemplate testRestTemplate;

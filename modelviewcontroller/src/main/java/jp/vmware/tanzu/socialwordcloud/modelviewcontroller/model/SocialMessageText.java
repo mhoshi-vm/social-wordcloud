@@ -6,22 +6,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class TweetText {
+public class SocialMessageText {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
-	public String tweetId;
+	public String messageId;
 
 	public String text;
 
-	public String getTweetId() {
-		return tweetId;
+	public String getMessageId() {
+		return messageId;
 	}
 
-	public void setTweetId(String tweetId) {
-		this.tweetId = tweetId;
+	public void setMessageId(String tweetId) {
+		this.messageId = tweetId;
 	}
 
 	public String getText() {

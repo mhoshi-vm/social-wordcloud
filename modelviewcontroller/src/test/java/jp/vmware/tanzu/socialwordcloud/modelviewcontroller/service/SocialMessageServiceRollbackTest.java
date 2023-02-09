@@ -1,26 +1,26 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service;
 
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.MyTweetRepository;
-import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.TweetTextRepository;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageRepository;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageTextRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-class MyTweetServiceRollbackTest {
+class SocialMessageServiceRollbackTest {
 
 	@Autowired
-	private MyTweetRepository myTweetRepository;
+	private SocialMessageRepository socialMessageRepository;
 
 	@Mock
-	private TweetTextRepository tweetTextRepository;
+	private SocialMessageTextRepository socialMessageTextRepository;
 
-	private MyTweetService myTweetService;
+	private SocialMessageService socialMessageService;
 
 	@BeforeEach
 	void setup() {
-		myTweetService = new MyTweetService(myTweetRepository, tweetTextRepository);
+		socialMessageService = new SocialMessageService(socialMessageRepository, socialMessageTextRepository);
 	}
 
 	// https://stackoverflow.com/questions/58443290/why-doesnt-my-transactional-method-rollback-when-testing

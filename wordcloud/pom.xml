@@ -30,7 +30,7 @@
                 </dependency>
                 <dependency>
                     <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
-                    <artifactId>twitterapiclient</artifactId>
+                    <artifactId>mastodonapiclient</artifactId>
                     <version>0.0.1-SNAPSHOT</version>
                 </dependency>
             </dependencies>
@@ -41,6 +41,16 @@
                 <dependency>
                     <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
                     <artifactId>modelviewcontroller</artifactId>
+                    <version>0.0.1-SNAPSHOT</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mastodonapiclient</id>
+            <dependencies>
+                <dependency>
+                    <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
+                    <artifactId>mastodonapiclient</artifactId>
                     <version>0.0.1-SNAPSHOT</version>
                 </dependency>
             </dependencies>

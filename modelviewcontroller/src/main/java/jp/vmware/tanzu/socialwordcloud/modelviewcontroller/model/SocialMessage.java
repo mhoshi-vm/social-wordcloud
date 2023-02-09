@@ -8,33 +8,37 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class MyTweet {
+public class SocialMessage {
 
 	@Id
-	public String tweetId;
+	public String messageId;
 
 	@Column(length = 10485760)
-	public String text;
+	public String context;
+
+	public String origin;
 
 	public String username;
+
+	public String lang;
 
 	@CreationTimestamp
 	public LocalDateTime createDateTime;
 
-	public String getTweetId() {
-		return tweetId;
+	public String getMessageId() {
+		return messageId;
 	}
 
-	public void setTweetId(String tweetId) {
-		this.tweetId = tweetId;
+	public void setMessageId(String tweetId) {
+		this.messageId = tweetId;
 	}
 
-	public String getText() {
-		return text;
+	public String getContext() {
+		return context;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setContext(String text) {
+		this.context = text;
 	}
 
 	public String getUsername() {
@@ -45,4 +49,11 @@ public class MyTweet {
 		this.username = username;
 	}
 
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
 }
