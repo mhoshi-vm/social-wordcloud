@@ -50,15 +50,19 @@ Standalone mode runs in the following technologies
 ### Prerequisite
 
 - Java 11 (or above)
-- [Twitter v2 API Bearer Token](https://developer.twitter.com/en/docs/authentication/oauth-2-0/bearer-tokens)
+- Create account in Mastodon 
+- Register an app (url is `https://<mstdn sever>/settings/applications`) with `read:statuses` and `read:notifications`
+- Get access token of the app
+
+> :warning: Currently only tested against https://mstdn.social/
 
 ### How to run
 
 ```
-export TWITTER_BEARER_TOKEN="AAAA...BSufQEAAAAAp9W..."
-export TWITTER_HASHTAGS="#HASTHAG_TO_SEARCH"
-git clone https://github.com/mhoshi-vm/twitter-wordcloud-demo
-cd twitter-wordcloud-demo
+export MASTODON_TOKEN="..."
+export MASTODON_HASHTAGS="#HASTHAG_TO_SEARCH"
+git clone https://github.com/mhoshi-vm/social-wordcloud
+cd social-wordcloud
 ./mvnw install && ./mvnw spring-boot:run -pl wordcloud
 ```
 
