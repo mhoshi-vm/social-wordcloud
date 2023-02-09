@@ -25,7 +25,7 @@ public class SocialMessageService {
 	}
 
 	@Transactional
-	public void deleteTweet(String tweetId) {
+	public void deleteMessage(String tweetId) {
 		socialMessageRepository.deleteByMessageId(tweetId);
 		socialMessageTextRepository.deleteByMessageId(tweetId);
 	}

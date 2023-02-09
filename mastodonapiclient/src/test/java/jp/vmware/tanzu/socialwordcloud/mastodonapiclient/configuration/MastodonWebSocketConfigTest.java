@@ -14,35 +14,26 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(
-        properties = {
-                "mastodon.scheme = ws",
-                "mastodon.url = localhost",
-                "mastodon.port = 18081",
-                "mastodon.token = dummy",
-                "server.port = 18081"
-        }
-)
+@SpringBootTest(properties = { "mastodon.scheme = ws", "mastodon.url = localhost", "mastodon.port = 18081",
+		"mastodon.token = dummy", "server.port = 18081" })
 class MastodonWebSocketConfigTest {
-    @Value("mastodon.port")
-    private Integer port;
 
+	@Value("mastodon.port")
+	private Integer port;
 
-    @Test
-    void testWebSocketStreamSource() throws IOException, InterruptedException {
-        StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
+	@Test
+	void testWebSocketStreamSource() throws IOException, InterruptedException {
+		StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
 
+		ClientWebSocketContainer clientWebSocketContainer = new ClientWebSocketContainer(webSocketClient,
+				"ws://localhost:" + this.port + "/api/v1/streaming");
+		clientWebSocketContainer.start();
 
+		WebSocketSession session = clientWebSocketContainer.getSession(null);
 
-        ClientWebSocketContainer clientWebSocketContainer =
-                new ClientWebSocketContainer(webSocketClient, "ws://localhost:" + this.port + "/api/v1/streaming");
-        clientWebSocketContainer.start();
+		session.sendMessage(new TextMessage("aaa"));
 
-        WebSocketSession session = clientWebSocketContainer.getSession(null);
-
-        session.sendMessage(new TextMessage("aaa"));
-
-        Thread.sleep(10000);
-    }
+		Thread.sleep(10000);
+	}
 
 }

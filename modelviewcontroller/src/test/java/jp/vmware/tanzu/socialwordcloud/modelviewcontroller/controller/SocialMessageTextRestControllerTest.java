@@ -42,7 +42,7 @@ class SocialMessageTextRestControllerTest {
 		List<SocialMessageTextRepository.TextCount> textCounts = new ArrayList<>();
 		textCounts.add(textCount);
 
-		when(socialMessageTextService.listTweetsPage()).thenReturn(textCounts);
+		when(socialMessageTextService.listMessagePage()).thenReturn(textCounts);
 
 		mockMvc.perform(get("/api/tweetcount")).andExpect(status().isOk()).andExpect(jsonPath("$", Matchers.hasSize(1)))
 				.andExpect(jsonPath("$[0].text", Matchers.equalTo("aaaa")))

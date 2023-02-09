@@ -26,7 +26,7 @@ public class SocialMessageController {
 
 	@PostMapping("/tweetDelete")
 	public ModelAndView deleteTweet(@ModelAttribute(value = "tweetDel") SocialMessage socialMessage) {
-		socialMessageService.deleteTweet(socialMessage.getMessageId());
+		socialMessageService.deleteMessage(socialMessage.getMessageId());
 		ModelAndView mav = new ModelAndView("tweets");
 		mav.addObject("tweets", socialMessageService.findAllByOrderByMessageIdDesc());
 		return mav;

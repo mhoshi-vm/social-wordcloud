@@ -62,7 +62,7 @@ class SocialMessageTextServiceTest {
 
 		socialMessageTextRepository.save(myTweet6);
 
-		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextService.listTweetsPage();
+		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextService.listMessagePage();
 		assertEquals("Morning", textCounts.get(0).getText());
 		assertEquals(3, textCounts.get(0).getSize());
 		assertEquals("Hello", textCounts.get(1).getText());
@@ -81,7 +81,7 @@ class SocialMessageTextServiceTest {
 			socialMessageTextRepository.save(myTweet);
 		}
 
-		assertEquals(400, socialMessageTextService.listTweetsPage().size());
+		assertEquals(400, socialMessageTextService.listMessagePage().size());
 
 	}
 

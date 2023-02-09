@@ -19,7 +19,7 @@ public class SocialMessageTextService {
 		this.socialMessageTextRepository = socialMessageTextRepository;
 	}
 
-	public List<SocialMessageTextRepository.TextCount> listTweetsPage() {
+	public List<SocialMessageTextRepository.TextCount> listMessagePage() {
 		return socialMessageTextRepository.listTextCount(PageRequest.of(0, pageSize));
 	}
 

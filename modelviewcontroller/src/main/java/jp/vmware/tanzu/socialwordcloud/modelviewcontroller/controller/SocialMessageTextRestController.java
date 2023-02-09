@@ -22,7 +22,7 @@ public class SocialMessageTextRestController {
 
 	@GetMapping("/tweetcount")
 	public ResponseEntity<List<SocialMessageTextRepository.TextCount>> listTweetCount() {
-		return new ResponseEntity<>(socialMessageTextService.listTweetsPage(), HttpStatus.OK);
+		return new ResponseEntity<>(socialMessageTextService.listMessagePage(), HttpStatus.OK);
 	}
 
 }

@@ -106,7 +106,7 @@ class SocialMessageServiceTest {
 
 		socialMessageTextRepository.save(socialMessageText4);
 
-		socialMessageService.deleteTweet("1111");
+		socialMessageService.deleteMessage("1111");
 
 		List<SocialMessage> socialMessages = (List<SocialMessage>) socialMessageRepository.findAll();
 		List<SocialMessageText> socialMessageTexts = (List<SocialMessageText>) socialMessageTextRepository.findAll();
