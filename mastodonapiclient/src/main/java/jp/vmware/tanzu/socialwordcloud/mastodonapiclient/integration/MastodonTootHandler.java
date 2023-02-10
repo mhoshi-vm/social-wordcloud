@@ -33,11 +33,13 @@ public class MastodonTootHandler {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode;
 		String tweetJsonString = "";
+		logger.debug("New stream data :" + streamData);
 		try {
 			jsonNode = objectMapper.readTree(streamData.toString());
 		}
 		catch (IOException e) {
-			throw new RuntimeException(e);
+			logger.warn("Received non json object : " +streamData);
+			throw new RuntimeException("Received non json object");
 		}
 		if (jsonNode.get("event") != null && jsonNode.get("event").asText().equals("update")) {
 			logger.debug("new update event, detected");
