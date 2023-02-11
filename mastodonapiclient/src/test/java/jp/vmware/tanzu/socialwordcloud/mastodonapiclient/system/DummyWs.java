@@ -11,21 +11,18 @@ import org.springframework.messaging.MessageChannel;
 @TestConfiguration
 public class DummyWs {
 
-    @Bean
-    @Primary
-    public WebSocketInboundChannelAdapter webSocketInboundChannelAdapter(MessageChannel handlerChannel) {
+	@Bean
+	@Primary
+	public WebSocketInboundChannelAdapter webSocketInboundChannelAdapter(MessageChannel handlerChannel) {
 
-        WebSocketInboundChannelAdapter adapter = new WebSocketInboundChannelAdapter(serverWebSocketContainer());
-        adapter.setOutputChannel(handlerChannel);
-        return adapter;
-    }
+		WebSocketInboundChannelAdapter adapter = new WebSocketInboundChannelAdapter(serverWebSocketContainer());
+		adapter.setOutputChannel(handlerChannel);
+		return adapter;
+	}
 
-    @Bean
-    public IntegrationWebSocketContainer serverWebSocketContainer() {
-        return new ServerWebSocketContainer("/test")
-                .withSockJs()
-                .setAllowedOrigins("*");
-    }
-
+	@Bean
+	public IntegrationWebSocketContainer serverWebSocketContainer() {
+		return new ServerWebSocketContainer("/test").withSockJs().setAllowedOrigins("*");
+	}
 
 }

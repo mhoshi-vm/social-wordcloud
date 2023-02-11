@@ -38,7 +38,7 @@ public class MastodonTootHandler {
 			jsonNode = objectMapper.readTree(streamData.toString());
 		}
 		catch (IOException e) {
-			logger.warn("Received non json object : " +streamData);
+			logger.warn("Received non json object : " + streamData);
 			throw new RuntimeException("Received non json object");
 		}
 		if (jsonNode.get("event") != null && jsonNode.get("event").asText().equals("update")) {

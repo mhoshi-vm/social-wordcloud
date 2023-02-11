@@ -20,7 +20,8 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(properties = {"spring.main.allow-bean-definition-overriding=true", "mastodon.token=aaaa"},webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(properties = { "spring.main.allow-bean-definition-overriding=true", "mastodon.token=aaaa" },
+		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = DummyWs.class)
 class MastodonWebSocketConfigTest {
 
@@ -31,7 +32,7 @@ class MastodonWebSocketConfigTest {
 	DummyHandler dummyHandler;
 
 	@BeforeEach
-	void resetOutput(){
+	void resetOutput() {
 		dummyHandler.setOutput("");
 	}
 
@@ -39,8 +40,8 @@ class MastodonWebSocketConfigTest {
 	void sendNonJson() throws IOException, InterruptedException {
 		StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
 
-		ClientWebSocketContainer clientWebSocketContainer =
-				new ClientWebSocketContainer(webSocketClient, "ws://localhost:" + this.port + "/test/websocket");
+		ClientWebSocketContainer clientWebSocketContainer = new ClientWebSocketContainer(webSocketClient,
+				"ws://localhost:" + this.port + "/test/websocket");
 		clientWebSocketContainer.start();
 
 		WebSocketSession session = clientWebSocketContainer.getSession(null);
@@ -56,8 +57,8 @@ class MastodonWebSocketConfigTest {
 	void sendCorrectJson() throws IOException, InterruptedException {
 		StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
 
-		ClientWebSocketContainer clientWebSocketContainer =
-				new ClientWebSocketContainer(webSocketClient, "ws://localhost:" + this.port + "/test/websocket");
+		ClientWebSocketContainer clientWebSocketContainer = new ClientWebSocketContainer(webSocketClient,
+				"ws://localhost:" + this.port + "/test/websocket");
 		clientWebSocketContainer.start();
 
 		WebSocketSession session = clientWebSocketContainer.getSession(null);
@@ -90,7 +91,7 @@ class MastodonWebSocketConfigTest {
 
 		assertEquals("mastodon", outputJson.get("origin").asText());
 		assertEquals("aaa", outputJson.get("data").get("id").asText());
-		assertEquals("aaaa",outputJson.get("data").get("text").asText());
+		assertEquals("aaaa", outputJson.get("data").get("text").asText());
 		assertEquals("dd", outputJson.get("data").get("lang").asText());
 		assertEquals("aaaa", outputJson.get("includes").get("users").get(0).get("name").asText());
 

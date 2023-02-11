@@ -10,18 +10,19 @@ import java.io.IOException;
 @Primary
 public class DummyHandler implements SocialMessageHandler {
 
-    String output;
+	String output;
 
-    public String getOutput() {
-        return output;
-    }
+	public String getOutput() {
+		return output;
+	}
 
-    @Override
-    public void handle(String tweet) throws IOException, InterruptedException {
-        output = tweet;
-    }
+	@Override
+	public void handle(String tweet) throws IOException, InterruptedException {
+		output = tweet;
+	}
 
-    public void setOutput(String output) {
-        this.output = output;
-    }
+	public void setOutput(String output) {
+		this.output = output;
+	}
+
 }

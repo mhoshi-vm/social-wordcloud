@@ -35,8 +35,8 @@ public class MastodonWebSocketConfig {
 	public ClientWebSocketContainer webSocketContainer() {
 
 		URIBuilder uriBuilder = new URIBuilder().setScheme(mastodonScheme).setHost(mastodonUrl).setPort(mastodonPort)
-				.setPath(mastodonPath).addParameter("access_token", mastodonToken)
-				.addParameter("stream", "hashtag").addParameter("tag", mastodonHashTag);
+				.setPath(mastodonPath).addParameter("access_token", mastodonToken).addParameter("stream", "hashtag")
+				.addParameter("tag", mastodonHashTag);
 
 		return new ClientWebSocketContainer(new StandardWebSocketClient(), uriBuilder.toString());
 	}
@@ -53,6 +53,5 @@ public class MastodonWebSocketConfig {
 	public MessageChannel handlerChannel() {
 		return new DirectChannel();
 	}
-
 
 }
