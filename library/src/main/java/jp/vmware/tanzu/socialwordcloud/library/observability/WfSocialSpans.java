@@ -9,24 +9,28 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-public class WfTweetSpans {
+public class WfSocialSpans {
 
 	private final Tracer tracer;
 
 	private final String appName;
 
-	public WfTweetSpans(Tracer tracer, @Value("${app.name}") String appName) {
+	private final String socialOrigin;
+
+	public WfSocialSpans(Tracer tracer, @Value("${app.name}") String appName,
+						 @Value("${social.origin:Social}") String socialOrigin) {
 		this.tracer = tracer;
 		this.appName = appName;
+		this.socialOrigin = socialOrigin;
 	}
 
 	@After("execution(* jp.vmware.tanzu.socialwordcloud.library.utils.SocialMessageHandler.handle(..))")
 	public void customizeTwitterSpan() {
 		Span span = tracer.currentSpan();
 		if (span != null) {
-			span.tag("_outboundExternalService", "Twitter");
+			span.tag("_outboundExternalService", socialOrigin);
 			span.tag("_externalApplication", appName);
-			span.tag("_externalComponent", "twitter-api");
+			span.tag("_externalComponent", "api-endpoint");
 		}
 	}
 

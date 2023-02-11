@@ -56,4 +56,5 @@ public class SocialMessage {
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
+
 }

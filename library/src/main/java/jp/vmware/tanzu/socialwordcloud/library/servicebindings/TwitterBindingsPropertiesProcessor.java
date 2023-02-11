@@ -22,6 +22,7 @@ public class TwitterBindingsPropertiesProcessor implements BindingsPropertiesPro
 			return;
 		}
 		properties.put("twitter.bearer.token", myBindings.get(0).getSecret().get("bearer-token"));
+		properties.put("social.origin", "Twitter");
 		properties.put("management.endpoint.health.group.liveness.include", "livenessState,twitterClient");
 		properties.put("management.endpoint.health.group.liveness.additional-path", "server:/livez");
 	}

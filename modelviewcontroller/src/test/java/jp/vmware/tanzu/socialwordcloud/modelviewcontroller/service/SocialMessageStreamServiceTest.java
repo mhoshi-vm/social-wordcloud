@@ -36,8 +36,8 @@ class SocialMessageStreamServiceTest {
 
 	@BeforeEach
 	void setup() {
-		this.socialMessageStreamService = new SocialMessageStreamService(socialMessageRepository, socialMessageTextRepository, morphologicalAnalysis,
-				"ja");
+		this.socialMessageStreamService = new SocialMessageStreamService(socialMessageRepository,
+				socialMessageTextRepository, morphologicalAnalysis, "ja");
 
 		this.spySocialMessageStreamService = Mockito.spy(socialMessageStreamService);
 
@@ -59,7 +59,8 @@ class SocialMessageStreamServiceTest {
 		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByMessageIdDesc();
 		assertEquals(1, socialMessages.size());
 
-		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository.listTextCount(Pageable.ofSize(10));
+		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
+				.listTextCount(Pageable.ofSize(10));
 		assertEquals("This", textCounts.get(0).getText());
 		assertEquals(1, textCounts.get(0).getSize());
 		assertEquals("is", textCounts.get(1).getText());
@@ -77,7 +78,8 @@ class SocialMessageStreamServiceTest {
 		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByMessageIdDesc();
 		assertEquals(0, socialMessages.size());
 
-		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository.listTextCount(Pageable.ofSize(10));
+		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
+				.listTextCount(Pageable.ofSize(10));
 		assertEquals(0, textCounts.size());
 	}
 
@@ -88,7 +90,8 @@ class SocialMessageStreamServiceTest {
 		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByMessageIdDesc();
 		assertEquals(0, socialMessages.size());
 
-		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository.listTextCount(Pageable.ofSize(10));
+		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
+				.listTextCount(Pageable.ofSize(10));
 		assertEquals(0, textCounts.size());
 	}
 
@@ -108,7 +111,8 @@ class SocialMessageStreamServiceTest {
 		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByMessageIdDesc();
 		assertEquals(1, socialMessages.size());
 
-		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository.listTextCount(Pageable.ofSize(10));
+		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
+				.listTextCount(Pageable.ofSize(10));
 		assertEquals("This", textCounts.get(0).getText());
 		assertEquals(1, textCounts.get(0).getSize());
 		assertEquals("is", textCounts.get(1).getText());

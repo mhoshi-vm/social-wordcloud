@@ -17,7 +17,8 @@ public class SocialMessageHandlerMQ implements SocialMessageHandler {
 
 	RabbitTemplate rabbitTemplate;
 
-	public SocialMessageHandlerMQ(RabbitTemplate rabbitTemplate, @Value("${message.queue.exchange}") String exchangeName) {
+	public SocialMessageHandlerMQ(RabbitTemplate rabbitTemplate,
+			@Value("${message.queue.exchange}") String exchangeName) {
 		this.rabbitTemplate = rabbitTemplate;
 		this.exchangeName = exchangeName;
 	}

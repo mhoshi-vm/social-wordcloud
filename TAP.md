@@ -78,14 +78,14 @@ cat <<EOF | kubectl apply -f-
 apiVersion: v1
 kind: Secret
 metadata:
-  name: production-twitter
+  name: production-mastodon
   namespace: service-instances
   labels:
     claimable: "true"
-type: servicebinding.io/twitter
+type: servicebinding.io/mastodon
 stringData:
-  type: twitter
-  bearer-token: <TWITTER_BEARER_TOKEN>
+  type: mastodon
+  access-token: <Mastodon Access Token>
 EOF
 ```
 
@@ -110,7 +110,7 @@ EOF
 **From developer namespace (if required change via `kubectl config set-context --current --namespace=<developer_namespace>`)** perform the claim.  
 ```
 tanzu services claim create rmq-claim --resource-name rmq-1 --resource-kind RabbitmqCluster --resource-api-version rabbitmq.com/v1beta1 --resource-namespace service-instances
-tanzu services claim create twitter-claim --resource-name production-twitter --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
+tanzu services claim create mastodon-claim -claim --resource-name production-mastodon --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
 tanzu services claim create wavefront-claim --resource-name production-wavefront --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
 tanzu services claim create postgres-claim --resource-name postgres-11 --resource-kind Postgres --resource-api-version sql.tanzu.vmware.com/v1 --resource-namespace service-instances
 tanzu services claim create gemfire-claim --resource-name gemfire-redis1 --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
@@ -152,7 +152,7 @@ tanzu apps workload apply twitter-api-client \
     --type server \
     --label app.kubernetes.io/part-of=twitter-demo \
     --service-ref "rabbitmq=${RESOURCE_CLAIM}:rmq-claim" \
-    --service-ref "twitter=${RESOURCE_CLAIM}:twitter-claim" \
+    --service-ref "twitter=${RESOURCE_CLAIM}:mastodon-claim" \
     --service-ref "wavefront=${RESOURCE_CLAIM}:wavefront-claim" \
     --build-env "BP_MAVEN_BUILT_MODULE=wordcloud" \
     --build-env BP_MAVEN_BUILD_ARGUMENTS="-pl wordcloud -am -P twitterapiclient package" \

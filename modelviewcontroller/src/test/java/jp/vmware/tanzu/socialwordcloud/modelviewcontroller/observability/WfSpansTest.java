@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class WfSpansTest {
 
 	@Autowired
-    SocialMessageStreamService socialMessageStreamService;
+	SocialMessageStreamService socialMessageStreamService;
 
 	@Autowired
 	TestRestTemplate testRestTemplate;

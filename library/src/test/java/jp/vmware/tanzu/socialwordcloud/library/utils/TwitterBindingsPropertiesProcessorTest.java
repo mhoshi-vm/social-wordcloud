@@ -15,8 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class TwitterBindingsPropertiesProcessorTest {
 
-	private final Bindings bindings = new Bindings(
-			new Binding("test-name", Paths.get("test-path"), new FluentMap().withEntry(Binding.TYPE, TwitterBindingsPropertiesProcessor.TYPE)
+	private final Bindings bindings = new Bindings(new Binding("test-name", Paths.get("test-path"),
+			new FluentMap().withEntry(Binding.TYPE, TwitterBindingsPropertiesProcessor.TYPE)
 					.withEntry("bearer-token", "test-bearer-token").withEntry("uri", "test-uri")));
 
 	private final MockEnvironment environment = new MockEnvironment();

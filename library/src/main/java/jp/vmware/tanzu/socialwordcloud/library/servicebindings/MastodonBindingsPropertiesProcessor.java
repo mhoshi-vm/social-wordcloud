@@ -22,6 +22,7 @@ public class MastodonBindingsPropertiesProcessor implements BindingsPropertiesPr
 			return;
 		}
 		properties.put("mastodon.token", myBindings.get(0).getSecret().get("access-token"));
+		properties.put("social.origin", "Mastodon");
 	}
 
 }

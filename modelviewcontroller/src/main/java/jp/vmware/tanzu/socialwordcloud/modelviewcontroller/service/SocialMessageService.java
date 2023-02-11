@@ -15,7 +15,8 @@ public class SocialMessageService {
 
 	public final SocialMessageTextRepository socialMessageTextRepository;
 
-	public SocialMessageService(SocialMessageRepository socialMessageRepository, SocialMessageTextRepository socialMessageTextRepository) {
+	public SocialMessageService(SocialMessageRepository socialMessageRepository,
+			SocialMessageTextRepository socialMessageTextRepository) {
 		this.socialMessageRepository = socialMessageRepository;
 		this.socialMessageTextRepository = socialMessageTextRepository;
 	}

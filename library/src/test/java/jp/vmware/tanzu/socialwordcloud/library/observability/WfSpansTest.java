@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class WfSpansTest {
 
 	@Autowired
-    SocialMessageHandler socialMessageHandler;
+	SocialMessageHandler socialMessageHandler;
 
 	@Autowired
 	TestRestTemplate testRestTemplate;

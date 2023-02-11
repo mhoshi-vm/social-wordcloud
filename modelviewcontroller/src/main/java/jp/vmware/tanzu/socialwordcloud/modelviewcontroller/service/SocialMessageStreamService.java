@@ -37,8 +37,9 @@ public class SocialMessageStreamService {
 
 	Pattern nonLetterPattern;
 
-	public SocialMessageStreamService(SocialMessageRepository socialMessageRepository, SocialMessageTextRepository socialMessageTextRepository,
-									  MorphologicalAnalysis morphologicalAnalysis, @Value("${twitter.search.lang}") String lang) {
+	public SocialMessageStreamService(SocialMessageRepository socialMessageRepository,
+			SocialMessageTextRepository socialMessageTextRepository, MorphologicalAnalysis morphologicalAnalysis,
+			@Value("${twitter.search.lang}") String lang) {
 		this.socialMessageRepository = socialMessageRepository;
 		this.socialMessageTextRepository = socialMessageTextRepository;
 		this.lang = lang;
@@ -98,7 +99,6 @@ public class SocialMessageStreamService {
 
 	}
 
-
 	public void notifyTweetEvent(String line) {
 		SocialMessage socialMessage = setSocialMessage(line);
 
@@ -108,7 +108,8 @@ public class SocialMessageStreamService {
 
 		for (SseEmitter emitter : emitters) {
 			try {
-				emitter.send(SseEmitter.event().name("newTweet").data("New Tweet Arrived : " + socialMessage.getContext()));
+				emitter.send(
+						SseEmitter.event().name("newTweet").data("New Tweet Arrived : " + socialMessage.getContext()));
 			}
 			catch (IOException e) {
 				logger.warn("Failed to send SSE :" + e);
@@ -135,7 +136,7 @@ public class SocialMessageStreamService {
 
 		SocialMessage socialMessage = new SocialMessage();
 
-		if (jsonFullNode.get("origin") != null){
+		if (jsonFullNode.get("origin") != null) {
 			socialMessage.setOrigin(jsonFullNode.get("origin").asText());
 		}
 
