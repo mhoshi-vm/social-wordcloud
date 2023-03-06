@@ -20,10 +20,10 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(properties = { "spring.main.allow-bean-definition-overriding=true", "mastodon.token=aaaa" },
-		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(properties = { "spring.main.allow-bean-definition-overriding=true", "mastodon.token=aaaa",
+		"mastodon.search.mode=stream" }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = DummyWs.class)
-class MastodonWebSocketConfigTest {
+class MastodonConfigTest {
 
 	@LocalServerPort
 	private String port;

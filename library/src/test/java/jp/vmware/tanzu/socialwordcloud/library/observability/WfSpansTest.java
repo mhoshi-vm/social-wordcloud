@@ -55,8 +55,8 @@ class WfSpansTest {
 			try {
 				if (span.name().startsWith("tweet-stream-handler")) {
 					spanFound = true;
-					assertEquals("Twitter", span.tag("_outboundExternalService"));
-					assertEquals("twitter-api", span.tag("_externalComponent"));
+					assertEquals("Social", span.tag("_outboundExternalService"));
+					assertEquals("api-endpoint", span.tag("_externalComponent"));
 					assertNotNull(span.tag("_externalApplication"));
 				}
 			}

@@ -1,7 +1,8 @@
 package jp.vmware.tanzu.socialwordcloud.mastodonapiclient.configuration;
 
+import jp.vmware.tanzu.socialwordcloud.mastodonapiclient.client.MastodonClient;
 import org.apache.http.client.utils.URIBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.channel.DirectChannel;
@@ -11,37 +12,23 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 @Configuration
-public class MastodonWebSocketConfig {
-
-	@Value("${mastodon.scheme:wss}")
-	String mastodonScheme;
-
-	@Value("${mastodon.url:mstdn.social}")
-	String mastodonUrl;
-
-	@Value("${mastodon.port:443}")
-	Integer mastodonPort;
-
-	@Value("${mastodon.token}")
-	String mastodonToken;
-
-	@Value("${mastodon.hashtag}")
-	String mastodonHashTag;
-
-	@Value("${mastodon.path:/api/v1/streaming}")
-	String mastodonPath;
+public class MastodonConfig {
 
 	@Bean
-	public ClientWebSocketContainer webSocketContainer() {
+	@ConditionalOnProperty(name = "mastodon.search.mode", havingValue = "stream")
+	public ClientWebSocketContainer webSocketContainer(MastodonClient mastodonClient) {
 
-		URIBuilder uriBuilder = new URIBuilder().setScheme(mastodonScheme).setHost(mastodonUrl).setPort(mastodonPort)
-				.setPath(mastodonPath).addParameter("access_token", mastodonToken).addParameter("stream", "hashtag")
-				.addParameter("tag", mastodonHashTag);
+		URIBuilder uriBuilder = new URIBuilder().setScheme(mastodonClient.getMastodonScheme())
+				.setHost(mastodonClient.getMastodonUrl()).setPort(mastodonClient.getMastodonPort())
+				.setPath(mastodonClient.getMastodonStreamingPath())
+				.addParameter("access_token", mastodonClient.getMastodonToken()).addParameter("stream", "hashtag")
+				.addParameter("tag", mastodonClient.getMastodonHashTag());
 
 		return new ClientWebSocketContainer(new StandardWebSocketClient(), uriBuilder.toString());
 	}
 
 	@Bean
+	@ConditionalOnProperty(name = "mastodon.search.mode", havingValue = "stream")
 	public WebSocketInboundChannelAdapter webSocketInboundChannelAdapter(
 			ClientWebSocketContainer clientWebSocketContainer, MessageChannel handlerChannel) {
 		WebSocketInboundChannelAdapter adapter = new WebSocketInboundChannelAdapter(clientWebSocketContainer);
