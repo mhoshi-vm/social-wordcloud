@@ -1,6 +1,7 @@
 package jp.vmware.tanzu.socialwordcloud.library.observability;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import javax.servlet.ServletResponse;
 import java.io.IOException;
 
 @Component
+@ConditionalOnProperty(value = "service.name", havingValue = "mvc")
 public class WfServletSpans extends GenericFilterBean {
 
 	private final Tracer tracer;
