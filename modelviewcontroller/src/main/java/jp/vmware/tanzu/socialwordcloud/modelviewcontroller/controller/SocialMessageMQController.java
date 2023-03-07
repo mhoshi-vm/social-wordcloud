@@ -22,16 +22,25 @@ public class SocialMessageMQController {
 	@RabbitListener(queues = "${message.queue.queue}")
 	public void tweetHandle(String tweet) throws InterruptedException {
 		logger.debug("Queue Received : " + tweet);
-		if (!tweet.isEmpty()) {
-			logger.debug("Queue Processing");
-			socialMessageStreamService.handler(tweet);
+		try {
+			if (!tweet.isEmpty()) {
+				logger.debug("Queue Processing");
+				socialMessageStreamService.handler(tweet);
+			}
+		}catch (Exception e){
+			logger.warn("Failed processing queue, but skipping");
 		}
 	}
 
 	@RabbitListener(queues = "#{mvcMQConfiguration.getNotificationQueue()}")
 	public void notificationHandle(String tweet) {
 		logger.debug("Queue Received : " + tweet);
-		socialMessageStreamService.notifyTweetEvent(tweet);
+		try {
+			socialMessageStreamService.notifyTweetEvent(tweet);
+		}catch (Exception e){
+			logger.warn("Failed processing queue, but skipping");
+		}
+
 	}
 
 }

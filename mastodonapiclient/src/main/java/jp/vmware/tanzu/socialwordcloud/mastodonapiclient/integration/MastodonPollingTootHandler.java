@@ -20,9 +20,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @ConditionalOnProperty(name = "mastodon.search.mode", havingValue = "interval")
@@ -32,119 +33,82 @@ public class MastodonPollingTootHandler {
 
 	MastodonClient mastodonClient;
 
-	public Date previousDate;
-
 	public String sinceId;
 
 	SocialMessageHandler socialMessageHandler;
 
 	public MastodonPollingTootHandler(MastodonClient mastodonClient, SocialMessageHandler socialMessageHandler) {
 		this.mastodonClient = mastodonClient;
-		this.previousDate = new Date();
 		this.sinceId = "0";
 		this.socialMessageHandler = socialMessageHandler;
 	}
 
 	@InboundChannelAdapter(value = "handlerChannel", poller = @Poller(fixedDelay = "15000"))
-	public List<SocialMessageData> mastodonPolling() throws ParseException, JsonProcessingException {
+	public List<SocialMessageData> mastodonPolling() throws JsonProcessingException {
 
 		RestTemplate restTemplate = mastodonClient.getRestTemplate();
 
 		// "2019-11-05T13:23:09.000Z"
-		SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
-		String maxId = "";
 
 		Map<String, String> params = new HashMap<>();
 		params.put("limit", "40");
+		params.put("since_id", this.sinceId);
 
 		HttpEntity<Void> getEntity = new HttpEntity<>(mastodonClient.setHeaders());
 
 		logger.debug("Request Headers :  " + getEntity.getHeaders());
 
-		boolean loop = true;
-		boolean firstLoop = true;
-
 		List<SocialMessageData> socialMessageDataList = new ArrayList<>();
 
-		while (loop) {
+		URIBuilder builder = new URIBuilder();
+		builder.setScheme(mastodonClient.getMastodonScheme());
+		builder.setPort(mastodonClient.getMastodonPort());
+		builder.setHost(mastodonClient.getMastodonUrl());
+		builder.setPath(mastodonClient.getMastodonPollingPath() + "/" + mastodonClient.getMastodonHashTag());
+		for (Map.Entry<String, String> param : params.entrySet()) {
+			builder.addParameter(param.getKey(), param.getValue());
+		}
 
-			logger.debug("Looping ...");
+		logger.debug("URL : " + builder);
 
-			if (firstLoop) {
-				params.put("since_id", sinceId);
-				logger.debug("First loop ...");
-			}
-			else {
-				params.remove("since_id");
-				params.put("max_id", maxId);
-				logger.debug("Next loop ...");
-			}
+		ResponseEntity<JsonNode> entity = restTemplate.exchange(builder.toString(), HttpMethod.GET, getEntity,
+				JsonNode.class);
 
-			URIBuilder builder = new URIBuilder();
-			builder.setScheme(mastodonClient.getMastodonScheme());
-			builder.setPort(mastodonClient.getMastodonPort());
-			builder.setHost(mastodonClient.getMastodonUrl());
-			builder.setPath(mastodonClient.getMastodonPollingPath() + "/" + mastodonClient.getMastodonHashTag());
-			for (Map.Entry<String, String> param : params.entrySet()) {
-				builder.addParameter(param.getKey(), param.getValue());
-			}
+		JsonNode response = entity.getBody();
 
-			logger.debug("URL : " + builder);
+		logger.debug("Response Headers :" + entity.getHeaders());
+		logger.debug("StatusCode : " + entity.getStatusCode());
+		logger.debug("response : " + response);
 
-			ResponseEntity<JsonNode> entity = restTemplate.exchange(builder.toString(), HttpMethod.GET, getEntity,
-					JsonNode.class);
+		if (response != null && response.isArray()) {
+			for (int i = 0; i < response.size(); i++) {
 
-			JsonNode response = entity.getBody();
-
-			logger.debug("Response Headers :" + entity.getHeaders());
-			logger.debug("StatusCode : " + entity.getStatusCode());
-			logger.debug("response : " + response);
-
-			int count = 0;
-			if (response != null && response.isArray()) {
-				for (JsonNode status : response) {
-
-					Date statusDate = parser.parse(status.get("created_at").asText());
-					String statusId = status.get("id").asText();
-					String statusContent = Jsoup.parse(status.get("content").asText()).text();
-					String statusLanguage = status.get("language").asText();
-					List<String> statusNames = new ArrayList<>();
-					if (status.get("account") != null && status.get("account").get("display_name") != null
-							&& status.get("account").get("display_name").isArray()) {
-						for (JsonNode name : status.get("account").get("display_name")) {
-							statusNames.add(name.asText());
-						}
-					}
-
-					if (previousDate.compareTo(statusDate) < 0) {
-						SocialMessageData socialMessageData = SocialMessageData.createSocialMessageData("mastodon",
-								statusId, statusContent, statusLanguage, statusNames);
-						logger.debug("adding social data :" + socialMessageData.createJson());
-						socialMessageDataList.add(socialMessageData);
-						count++;
-					}
-					else {
-						logger.debug("Updating previous date : " + statusDate);
-						this.previousDate = statusDate;
-						logger.debug("Updating min id : " + statusId);
-						this.sinceId = statusId;
-						logger.debug("Ending event lookup");
-						break;
-					}
+				JsonNode status = response.get(i);
+				String statusId = status.get("id").asText();
+				String statusContent = Jsoup.parse(status.get("content").asText()).text();
+				String statusLanguage = status.get("language").asText();
+				List<String> statusNames = new ArrayList<>();
+				if (status.get("account") != null && status.get("account").get("display_name") != null) {
+					statusNames.add(status.get("account").get("display_name").asText());
 				}
-			}
-			firstLoop = false;
 
-			if (count == 40 && response.get(39) != null) {
-				logger.debug("Updating max id : " + response.get(39).get("id"));
-				maxId = response.get(39).get("id").asText();
-				logger.debug("Ending event lookup");
-			}
-			else {
-				loop = false;
+				if (this.sinceId.equals("0")) {
+					logger.debug("Update since id :" + sinceId);
+					this.sinceId = statusId;
+					break;
+				}
+				if (i == 0 && !this.sinceId.equals(statusId)) {
+					logger.debug("Update since id :" + sinceId);
+					this.sinceId = statusId;
+				}
+
+				SocialMessageData socialMessageData = SocialMessageData.createSocialMessageData("mastodon", statusId,
+						statusContent, statusLanguage, statusNames);
+				logger.debug("adding social data :" + socialMessageData.createJson());
+				socialMessageDataList.add(socialMessageData);
 			}
 		}
+
 		logger.debug("Sending data");
 		return socialMessageDataList;
 	}
