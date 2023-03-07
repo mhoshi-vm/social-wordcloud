@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = TestConfig.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = { "test=true" })
+@TestPropertySource(properties = { "test=true", "service.name=mvc" })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class WfSpansTest {
 
