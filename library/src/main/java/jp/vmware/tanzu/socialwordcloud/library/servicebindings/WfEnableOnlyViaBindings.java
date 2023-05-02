@@ -17,16 +17,11 @@ public class WfEnableOnlyViaBindings implements BindingsPropertiesProcessor {
 
 		List<Binding> wfBindings = bindings.filterBindings(TYPE);
 		if (wfBindings.size() == 0) {
-			map.put("management.metrics.export.wavefront.enabled", "false");
-			map.put("wavefront.tracing.enabled", "false");
-			map.put("wavefront.freemium-account", "false");
+			map.put("management.endpoint.wavefront.enabled", "false");
+			map.put("management.wavefront.metrics.export.enabled", "false");
+			map.put("management.wavefront.api-token", "dummy");
+			map.put("management.tracing.enabled", "false");
 		}
-		else {
-			map.put("management.metrics.export.wavefront.enabled", "true");
-			map.put("wavefront.tracing.enabled", "true");
-			map.put("wavefront.freemium-account", "false");
-		}
-
 	}
 
 }

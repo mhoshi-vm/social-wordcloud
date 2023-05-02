@@ -1,5 +1,6 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.utils;
 
+import io.micrometer.observation.annotation.Observed;
 import jp.vmware.tanzu.socialwordcloud.library.utils.SocialMessageHandler;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageStreamService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
