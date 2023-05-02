@@ -38,8 +38,11 @@ public class TwitterClientImpl implements TwitterClient {
 
 		OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-		httpClient = builder.connectTimeout(120, TimeUnit.SECONDS).writeTimeout(120, TimeUnit.SECONDS)
-				.readTimeout(120, TimeUnit.SECONDS).connectionPool(new ConnectionPool(0, 5, TimeUnit.SECONDS)).build();
+		httpClient = builder.connectTimeout(120, TimeUnit.SECONDS)
+			.writeTimeout(120, TimeUnit.SECONDS)
+			.readTimeout(120, TimeUnit.SECONDS)
+			.connectionPool(new ConnectionPool(0, 5, TimeUnit.SECONDS))
+			.build();
 
 		ApiClient apiClient = new ApiClient(httpClient);
 		apiClient.setTwitterCredentials(new TwitterCredentialsBearer(twitterBearerToken));

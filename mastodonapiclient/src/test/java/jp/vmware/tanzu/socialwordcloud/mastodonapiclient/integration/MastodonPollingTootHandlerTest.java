@@ -75,14 +75,13 @@ class MastodonPollingTootHandlerTest {
 		HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
 		when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), eq(entity), eq(JsonNode.class)))
-				.thenReturn(response);
+			.thenReturn(response);
 
 		// initial run (just to capture since id)
 		List<SocialMessageData> socialMessageDataList = mastodonPollingTootHandler.mastodonPolling();
 
 		// second poll
 		socialMessageDataList = mastodonPollingTootHandler.mastodonPolling();
-
 
 		Assertions.assertEquals(socialMessageDataList.size(), 1);
 	}
@@ -113,7 +112,7 @@ class MastodonPollingTootHandlerTest {
 		HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
 		when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), eq(entity), eq(JsonNode.class)))
-				.thenReturn(response);
+			.thenReturn(response);
 
 		List<SocialMessageData> socialMessageDataList = mastodonPollingTootHandler.mastodonPolling();
 
@@ -145,7 +144,7 @@ class MastodonPollingTootHandlerTest {
 
 		// Initital Run
 		when(restTemplate.exchange("aaa://aaa:111/aaa/aaa?limit=40&since_id=0", HttpMethod.GET, entity, JsonNode.class))
-				.thenReturn(response);
+			.thenReturn(response);
 
 		ArrayNode statusesLoop = mapper.createArrayNode();
 		for (int i = 0; i < 40; i++) {
@@ -164,10 +163,10 @@ class MastodonPollingTootHandlerTest {
 
 		ResponseEntity<JsonNode> responseLoop = new ResponseEntity<>(statusesLoop, HttpStatus.OK);
 
-
 		// Second run
 		when(restTemplate.exchange("aaa://aaa:111/aaa/aaa?limit=40&since_id=aaaa", HttpMethod.GET, entity,
-				JsonNode.class)).thenReturn(responseLoop);
+				JsonNode.class))
+			.thenReturn(responseLoop);
 
 		List<SocialMessageData> socialMessageDataList = mastodonPollingTootHandler.mastodonPolling();
 		socialMessageDataList = mastodonPollingTootHandler.mastodonPolling();

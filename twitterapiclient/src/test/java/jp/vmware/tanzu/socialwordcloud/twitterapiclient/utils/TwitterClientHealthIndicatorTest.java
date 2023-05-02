@@ -32,13 +32,15 @@ class TwitterClientHealthIndicatorTest {
 
 		Mockito.when(twitterClient.getStatus()).thenReturn(TwitterClient.UP);
 
-		mockMvc.perform(get("/actuator/health/liveness")).andExpect(jsonPath("$.status").value("UP"))
-				.andExpect(jsonPath("$.components.livenessState.status").value("UP"))
-				.andExpect(jsonPath("$.components.twitterClient.status").value("UP"));
+		mockMvc.perform(get("/actuator/health/liveness"))
+			.andExpect(jsonPath("$.status").value("UP"))
+			.andExpect(jsonPath("$.components.livenessState.status").value("UP"))
+			.andExpect(jsonPath("$.components.twitterClient.status").value("UP"));
 
-		mockMvc.perform(get("/livez")).andExpect(jsonPath("$.status").value("UP"))
-				.andExpect(jsonPath("$.components.livenessState.status").value("UP"))
-				.andExpect(jsonPath("$.components.twitterClient.status").value("UP"));
+		mockMvc.perform(get("/livez"))
+			.andExpect(jsonPath("$.status").value("UP"))
+			.andExpect(jsonPath("$.components.livenessState.status").value("UP"))
+			.andExpect(jsonPath("$.components.twitterClient.status").value("UP"));
 
 	}
 
@@ -47,13 +49,15 @@ class TwitterClientHealthIndicatorTest {
 
 		Mockito.when(twitterClient.getStatus()).thenReturn(TwitterClient.DOWN);
 
-		mockMvc.perform(get("/actuator/health/liveness")).andExpect(jsonPath("$.status").value("DOWN"))
-				.andExpect(jsonPath("$.components.livenessState.status").value("UP"))
-				.andExpect(jsonPath("$.components.twitterClient.status").value("DOWN"));
+		mockMvc.perform(get("/actuator/health/liveness"))
+			.andExpect(jsonPath("$.status").value("DOWN"))
+			.andExpect(jsonPath("$.components.livenessState.status").value("UP"))
+			.andExpect(jsonPath("$.components.twitterClient.status").value("DOWN"));
 
-		mockMvc.perform(get("/livez")).andExpect(jsonPath("$.status").value("DOWN"))
-				.andExpect(jsonPath("$.components.livenessState.status").value("UP"))
-				.andExpect(jsonPath("$.components.twitterClient.status").value("DOWN"));
+		mockMvc.perform(get("/livez"))
+			.andExpect(jsonPath("$.status").value("DOWN"))
+			.andExpect(jsonPath("$.components.livenessState.status").value("UP"))
+			.andExpect(jsonPath("$.components.twitterClient.status").value("DOWN"));
 
 	}
 

@@ -88,10 +88,12 @@ class IntervalSearchTest {
 		tweets.add(tweet);
 		nextRecentResponse.setData(tweets);
 
-		Mockito.doReturn(nextRecentResponse).when(twitterStream).recentSearch(Mockito.eq(null), Mockito.eq(null),
-				Mockito.eq("dummy"));
-		Mockito.doReturn(recentResponse).when(twitterStream).recentSearch(Mockito.any(), Mockito.eq(null),
-				Mockito.eq(null));
+		Mockito.doReturn(nextRecentResponse)
+			.when(twitterStream)
+			.recentSearch(Mockito.eq(null), Mockito.eq(null), Mockito.eq("dummy"));
+		Mockito.doReturn(recentResponse)
+			.when(twitterStream)
+			.recentSearch(Mockito.any(), Mockito.eq(null), Mockito.eq(null));
 
 		twitterStream.performTwitterSearch();
 		twitterStream.performTwitterSearch();
@@ -124,10 +126,12 @@ class IntervalSearchTest {
 		tweets.add(tweet);
 		nextRecentResponse.setData(tweets);
 
-		Mockito.doReturn(nextRecentResponse).when(twitterStream).recentSearch(Mockito.eq(null), Mockito.eq("dummy"),
-				Mockito.any());
-		Mockito.doReturn(recentResponse).when(twitterStream).recentSearch(Mockito.any(), Mockito.eq(null),
-				Mockito.any());
+		Mockito.doReturn(nextRecentResponse)
+			.when(twitterStream)
+			.recentSearch(Mockito.eq(null), Mockito.eq("dummy"), Mockito.any());
+		Mockito.doReturn(recentResponse)
+			.when(twitterStream)
+			.recentSearch(Mockito.any(), Mockito.eq(null), Mockito.any());
 
 		twitterStream.performTwitterSearch();
 		assertEquals(101, tweetHandler.getTweets().size());

@@ -1,6 +1,5 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller;
 
-import jp.vmware.tanzu.socialwordcloud.library.observability.WfServletSpans;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageTextService;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageTextRepository;
 import org.hamcrest.Matchers;
@@ -29,10 +28,6 @@ class SocialMessageTextRestControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	// Silent WfServletBean
-	@MockBean
-	private WfServletSpans wfServletSpans;
-
 	// https://medium.com/@reachansari/rest-endpoint-testing-with-mockmvc-7b3da1f83fbb
 	@Test
 	void listTweetCount() throws Exception {
@@ -44,9 +39,11 @@ class SocialMessageTextRestControllerTest {
 
 		when(socialMessageTextService.listMessagePage()).thenReturn(textCounts);
 
-		mockMvc.perform(get("/api/tweetcount")).andExpect(status().isOk()).andExpect(jsonPath("$", Matchers.hasSize(1)))
-				.andExpect(jsonPath("$[0].text", Matchers.equalTo("aaaa")))
-				.andExpect(jsonPath("$[0].size", Matchers.equalTo(100)));
+		mockMvc.perform(get("/api/tweetcount"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", Matchers.hasSize(1)))
+			.andExpect(jsonPath("$[0].text", Matchers.equalTo("aaaa")))
+			.andExpect(jsonPath("$[0].size", Matchers.equalTo(100)));
 	}
 
 	static class CustomTextCount implements SocialMessageTextRepository.TextCount {

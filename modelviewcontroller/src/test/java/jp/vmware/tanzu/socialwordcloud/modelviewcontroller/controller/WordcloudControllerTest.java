@@ -1,6 +1,5 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller;
 
-import jp.vmware.tanzu.socialwordcloud.library.observability.WfServletSpans;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,10 +18,6 @@ class WordcloudControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-
-	// Silent WfServletBean
-	@MockBean
-	private WfServletSpans wfServletSpans;
 
 	@Test
 	void wordcloud() throws Exception {

@@ -72,10 +72,12 @@ public class FilteredStream implements TweetSearch {
 		}
 		logger.debug("Configured Rules : " + configuredRules);
 
-		List<String> missingRules = hashTags.stream().filter(element -> !configuredRules.contains(element))
-				.collect(Collectors.toList());
-		List<String> unneededRules = configuredRules.stream().filter(element -> !hashTags.contains(element))
-				.collect(Collectors.toList());
+		List<String> missingRules = hashTags.stream()
+			.filter(element -> !configuredRules.contains(element))
+			.collect(Collectors.toList());
+		List<String> unneededRules = configuredRules.stream()
+			.filter(element -> !hashTags.contains(element))
+			.collect(Collectors.toList());
 
 		logger.debug("Missing Rules : " + missingRules);
 		logger.debug("Unneeded Rules : " + unneededRules);
@@ -84,8 +86,9 @@ public class FilteredStream implements TweetSearch {
 
 			logger.info("Found missing twitter rules : " + missingRules);
 
-			List<RuleNoId> ruleNoIds = missingRules.stream().map(keyword -> new RuleNoId().value(keyword))
-					.collect(Collectors.toList());
+			List<RuleNoId> ruleNoIds = missingRules.stream()
+				.map(keyword -> new RuleNoId().value(keyword))
+				.collect(Collectors.toList());
 			addRulesRequest.add(ruleNoIds);
 			AddOrDeleteRulesRequest addOrDeleteRulesRequest = new AddOrDeleteRulesRequest(addRulesRequest);
 
@@ -124,8 +127,15 @@ public class FilteredStream implements TweetSearch {
 
 	public InputStream setInputStream(Set<String> tweetFields, Set<String> expansions, Set<String> userFields)
 			throws ApiException {
-		return apiInstance.searchStream().backfillMinutes(0).tweetFields(tweetFields).expansions(expansions)
-				.mediaFields(null).pollFields(null).userFields(userFields).placeFields(null).execute(RETRIES);
+		return apiInstance.searchStream()
+			.backfillMinutes(0)
+			.tweetFields(tweetFields)
+			.expansions(expansions)
+			.mediaFields(null)
+			.pollFields(null)
+			.userFields(userFields)
+			.placeFields(null)
+			.execute(RETRIES);
 	}
 
 	@Override

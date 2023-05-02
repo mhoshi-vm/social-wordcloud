@@ -9,57 +9,58 @@ import java.util.List;
 
 public class SocialMessageData {
 
-    public String origin;
+	public String origin;
 
-    public String id;
+	public String id;
 
-    public String text;
+	public String text;
 
-    public String lang;
+	public String lang;
 
-    public List<String> names;
+	public List<String> names;
 
-    private SocialMessageData(String origin, String id, String text, String lang, List<String> names) {
-        this.origin = origin;
-        this.id = id;
-        this.text = text;
-        this.lang = lang;
-        this.names = names;
-    }
+	private SocialMessageData(String origin, String id, String text, String lang, List<String> names) {
+		this.origin = origin;
+		this.id = id;
+		this.text = text;
+		this.lang = lang;
+		this.names = names;
+	}
 
-    public static SocialMessageData createSocialMessageData(String origin, String id, String text, String lang, List<String> names) {
-        return new SocialMessageData(origin, id, text, lang, names);
-    }
+	public static SocialMessageData createSocialMessageData(String origin, String id, String text, String lang,
+			List<String> names) {
+		return new SocialMessageData(origin, id, text, lang, names);
+	}
 
-    public String createJson() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode jNode = mapper.createObjectNode();
-        ObjectNode dataNode = mapper.createObjectNode();
-        ObjectNode includesNode = mapper.createObjectNode();
-        ArrayNode usersNode = mapper.createArrayNode();
-        ObjectNode nullNode = mapper.createObjectNode();
+	public String createJson() throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode jNode = mapper.createObjectNode();
+		ObjectNode dataNode = mapper.createObjectNode();
+		ObjectNode includesNode = mapper.createObjectNode();
+		ArrayNode usersNode = mapper.createArrayNode();
+		ObjectNode nullNode = mapper.createObjectNode();
 
-        jNode.put("origin", origin);
-        jNode.set("data", nullNode);
-        jNode.set("includes", nullNode);
+		jNode.put("origin", origin);
+		jNode.set("data", nullNode);
+		jNode.set("includes", nullNode);
 
-        dataNode.put("id", id);
-        dataNode.put("text", text);
-        dataNode.put("lang", lang);
+		dataNode.put("id", id);
+		dataNode.put("text", text);
+		dataNode.put("lang", lang);
 
-        ObjectNode userNode = mapper.createObjectNode();
+		ObjectNode userNode = mapper.createObjectNode();
 
-        for (String name : names){
-            userNode.put("name", name);
-        }
+		for (String name : names) {
+			userNode.put("name", name);
+		}
 
-        usersNode.add(userNode);
-        includesNode.set("users", usersNode);
+		usersNode.add(userNode);
+		includesNode.set("users", usersNode);
 
-        jNode.set("data", dataNode);
-        jNode.set("includes", includesNode);
+		jNode.set("data", dataNode);
+		jNode.set("includes", includesNode);
 
-        return jNode.toString();
-    }
+		return jNode.toString();
+	}
 
 }
