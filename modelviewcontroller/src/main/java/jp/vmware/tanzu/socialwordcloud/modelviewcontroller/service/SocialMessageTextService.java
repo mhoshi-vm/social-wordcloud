@@ -4,7 +4,7 @@ import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMess
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.List;
 
 @Service

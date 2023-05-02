@@ -15,7 +15,7 @@
     <packaging>pom</packaging>
     <description>Creates a wordcloud from social tweets</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <spring-cloud.version>2021.0.5</spring-cloud.version>
         <spring-cloud-bindings.version>1.11.0</spring-cloud-bindings.version>
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
