@@ -23,7 +23,7 @@
         <p6spy.version>3.9.1</p6spy.version>
         <twitter.sdk.version>2.0.3</twitter.sdk.version>
         <kuromoji.version>0.9.0</kuromoji.version>
-        <jsoup.version>1.15.4</jsoup.version>
+        <jsoup.version>1.16.1</jsoup.version>
         <!-- Web dependencies -->
         <webjars-bootstrap.version>5.2.3</webjars-bootstrap.version>
         <webjars-jquery.version>3.6.4</webjars-jquery.version>
