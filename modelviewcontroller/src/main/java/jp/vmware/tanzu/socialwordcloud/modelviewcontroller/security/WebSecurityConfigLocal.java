@@ -13,14 +13,18 @@ public class WebSecurityConfigLocal {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.formLogin(login -> login.loginProcessingUrl("/login").loginPage("/login").defaultSuccessUrl("/tweets")
-				.permitAll())
-				.authorizeHttpRequests(authz -> authz
-						.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-						.mvcMatchers("/", "/app.js", "/api/**", "/built/**", "/access-denied", "/livez", "/readyz",
-								"/actuator/**", "/v3/api-docs")
-						.permitAll().anyRequest().authenticated())
-				.logout(logout -> logout.logoutSuccessUrl("/"));
+		http.formLogin(login -> login.loginProcessingUrl("/login")
+			.loginPage("/login")
+			.defaultSuccessUrl("/tweets")
+			.permitAll())
+			.authorizeHttpRequests(authz -> authz.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+				.permitAll()
+				.requestMatchers("/", "/app.js", "/api/**", "/built/**", "/access-denied", "/livez", "/readyz",
+						"/actuator/**", "/v3/api-docs")
+				.permitAll()
+				.anyRequest()
+				.authenticated())
+			.logout(logout -> logout.logoutSuccessUrl("/"));
 		return http.build();
 	}
 

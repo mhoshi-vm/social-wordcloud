@@ -1,6 +1,5 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller;
 
-import jp.vmware.tanzu.socialwordcloud.library.observability.WfServletSpans;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageService;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
 import org.junit.jupiter.api.Test;
@@ -28,10 +27,6 @@ class SocialMessageControllerTest {
 	@MockBean
 	private SocialMessageService socialMessageService;
 
-	// Silent WfServletBean
-	@MockBean
-	private WfServletSpans wfServletSpans;
-
 	@Test
 	void getAllTweets() throws Exception {
 		SocialMessage socialMessage1 = new SocialMessage();
@@ -51,8 +46,10 @@ class SocialMessageControllerTest {
 
 		when(socialMessageService.findAllByOrderByMessageIdDesc()).thenReturn(socialMessageList);
 
-		mockMvc.perform(get("/tweets")).andExpect(status().isOk()).andExpect(view().name("tweets"))
-				.andExpect(model().attribute("tweets", socialMessageList));
+		mockMvc.perform(get("/tweets"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("tweets"))
+			.andExpect(model().attribute("tweets", socialMessageList));
 	}
 
 	@Test

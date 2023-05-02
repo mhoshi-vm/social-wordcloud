@@ -8,14 +8,14 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>modelviewcontroller</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${project.parent.version}</version>
     <name>modelviewcontroller</name>
     <description>modelviewcontroller</description>
     <dependencies>
         <dependency>
             <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
             <artifactId>library</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -35,7 +35,7 @@
         </dependency>
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -84,9 +84,22 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.atilika.kuromoji</groupId>
             <artifactId>kuromoji-ipadic</artifactId>
             <version>${kuromoji.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.transaction</groupId>
+            <artifactId>jakarta.transaction-api</artifactId>
         </dependency>
 
         <!-- webjars -->
@@ -131,7 +144,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.12.1</version>
+                <version>${frontend-maven-plugin.version}</version>
                 <configuration>
                     <workingDirectory>../frontend-js/</workingDirectory>
                 </configuration>
@@ -142,8 +155,8 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v18.13.0</nodeVersion>
-                            <npmVersion>8.19.3</npmVersion>
+                            <nodeVersion>${install-node-and-npm.node.version}</nodeVersion>
+                            <npmVersion>${install-node-and-npm.npm.version}</npmVersion>
                         </configuration>
                     </execution>
                     <execution>

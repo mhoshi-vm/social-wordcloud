@@ -24,15 +24,23 @@ public class WebSecurityConfigOidc {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.formLogin(login -> login.loginProcessingUrl("/login").loginPage("/login").defaultSuccessUrl("/tweets")
-				.permitAll())
-				.authorizeHttpRequests(authz -> authz
-						.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-						.mvcMatchers("/", "/app.js", "/api/**", "/built/**", "/access-denied", "/livez", "/readyz",
-								"/actuator/**", "/v3/api-docs")
-						.permitAll().anyRequest().authenticated())
-				.logout().logoutSuccessHandler(oidcLogoutSuccessHandler()).logoutSuccessUrl("/").and()
-				.oauth2Login(withDefaults()).oauth2Client(withDefaults());
+		http.formLogin(login -> login.loginProcessingUrl("/login")
+			.loginPage("/login")
+			.defaultSuccessUrl("/tweets")
+			.permitAll())
+			.authorizeHttpRequests(authz -> authz.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+				.permitAll()
+				.requestMatchers("/", "/app.js", "/api/**", "/built/**", "/access-denied", "/livez", "/readyz",
+						"/actuator/**", "/v3/api-docs")
+				.permitAll()
+				.anyRequest()
+				.authenticated())
+			.logout()
+			.logoutSuccessHandler(oidcLogoutSuccessHandler())
+			.logoutSuccessUrl("/")
+			.and()
+			.oauth2Login(withDefaults())
+			.oauth2Client(withDefaults());
 		return http.build();
 	}
 

@@ -19,10 +19,12 @@ public class MastodonConfig {
 	public ClientWebSocketContainer webSocketContainer(MastodonClient mastodonClient) {
 
 		URIBuilder uriBuilder = new URIBuilder().setScheme(mastodonClient.getMastodonScheme())
-				.setHost(mastodonClient.getMastodonUrl()).setPort(mastodonClient.getMastodonPort())
-				.setPath(mastodonClient.getMastodonStreamingPath())
-				.addParameter("access_token", mastodonClient.getMastodonToken()).addParameter("stream", "hashtag")
-				.addParameter("tag", mastodonClient.getMastodonHashTag());
+			.setHost(mastodonClient.getMastodonUrl())
+			.setPort(mastodonClient.getMastodonPort())
+			.setPath(mastodonClient.getMastodonStreamingPath())
+			.addParameter("access_token", mastodonClient.getMastodonToken())
+			.addParameter("stream", "hashtag")
+			.addParameter("tag", mastodonClient.getMastodonHashTag());
 
 		return new ClientWebSocketContainer(new StandardWebSocketClient(), uriBuilder.toString());
 	}

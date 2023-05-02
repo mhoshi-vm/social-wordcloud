@@ -27,7 +27,8 @@ public class SocialMessageMQController {
 				logger.debug("Queue Processing");
 				socialMessageStreamService.handler(tweet);
 			}
-		}catch (Exception e){
+		}
+		catch (Exception e) {
 			logger.warn("Failed processing queue, but skipping");
 		}
 	}
@@ -37,7 +38,8 @@ public class SocialMessageMQController {
 		logger.debug("Queue Received : " + tweet);
 		try {
 			socialMessageStreamService.notifyTweetEvent(tweet);
-		}catch (Exception e){
+		}
+		catch (Exception e) {
 			logger.warn("Failed processing queue, but skipping");
 		}
 

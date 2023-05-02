@@ -1,5 +1,6 @@
 package jp.vmware.tanzu.socialwordcloud.library.utils;
 
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 

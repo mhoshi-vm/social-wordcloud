@@ -17,8 +17,10 @@ import static org.springframework.cloud.bindings.boot.SpringSecurityOAuth2Bindin
 class OIDCBindingsPropertiesProcessorTest {
 
 	private final Bindings bindings = new Bindings(new Binding("test-name", Paths.get("test-path"),
-			new FluentMap().withEntry(Binding.TYPE, TYPE).withEntry("provider", "github")
-					.withEntry("client-id", "github-client-id").withEntry("client-secret", "github-client-secret")));
+			new FluentMap().withEntry(Binding.TYPE, TYPE)
+				.withEntry("provider", "github")
+				.withEntry("client-id", "github-client-id")
+				.withEntry("client-secret", "github-client-secret")));
 
 	private final MockEnvironment environment = new MockEnvironment();
 

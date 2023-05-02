@@ -26,7 +26,7 @@ class RedisBindingsPropertiesProcessorTest {
 	void test() {
 		new RedisEnabledViaBindings().process(environment, bindings, properties);
 		MapAssert<String, Object> stringObjectMapAssert = assertThat(properties)
-				.containsEntry("spring.session.store-type", "redis");
+			.containsEntry("spring.session.store-type", "redis");
 	}
 
 }

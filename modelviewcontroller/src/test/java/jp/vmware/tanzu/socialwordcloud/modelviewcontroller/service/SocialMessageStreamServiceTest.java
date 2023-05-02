@@ -60,7 +60,7 @@ class SocialMessageStreamServiceTest {
 		assertEquals(1, socialMessages.size());
 
 		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
-				.listTextCount(Pageable.ofSize(10));
+			.listTextCount(Pageable.ofSize(10));
 		assertEquals("This", textCounts.get(0).getText());
 		assertEquals(1, textCounts.get(0).getSize());
 		assertEquals("is", textCounts.get(1).getText());
@@ -79,7 +79,7 @@ class SocialMessageStreamServiceTest {
 		assertEquals(0, socialMessages.size());
 
 		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
-				.listTextCount(Pageable.ofSize(10));
+			.listTextCount(Pageable.ofSize(10));
 		assertEquals(0, textCounts.size());
 	}
 
@@ -91,7 +91,7 @@ class SocialMessageStreamServiceTest {
 		assertEquals(0, socialMessages.size());
 
 		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
-				.listTextCount(Pageable.ofSize(10));
+			.listTextCount(Pageable.ofSize(10));
 		assertEquals(0, textCounts.size());
 	}
 
@@ -112,7 +112,7 @@ class SocialMessageStreamServiceTest {
 		assertEquals(1, socialMessages.size());
 
 		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
-				.listTextCount(Pageable.ofSize(10));
+			.listTextCount(Pageable.ofSize(10));
 		assertEquals("This", textCounts.get(0).getText());
 		assertEquals(1, textCounts.get(0).getSize());
 		assertEquals("is", textCounts.get(1).getText());

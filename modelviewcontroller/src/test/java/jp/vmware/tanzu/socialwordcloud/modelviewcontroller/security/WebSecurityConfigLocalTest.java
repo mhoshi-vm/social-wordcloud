@@ -1,6 +1,5 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.security;
 
-import jp.vmware.tanzu.socialwordcloud.library.observability.WfServletSpans;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.SocialMessageMQController;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.WebSocketEventController;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageService;
@@ -30,10 +29,6 @@ class WebSecurityConfigLocalTest {
 	@MockBean
 	private SocialMessageTextService socialMessageTextService;
 
-	// Silent WfServletBean
-	@MockBean
-	private WfServletSpans wfServletSpans;
-
 	// Silent TweetMQ
 	@MockBean
 	private SocialMessageMQController socialMessageMQController;
@@ -46,8 +41,6 @@ class WebSecurityConfigLocalTest {
 		this.mockMvc.perform(get("/")).andExpect(status().isOk());
 		this.mockMvc.perform(get("/login")).andExpect(status().isOk());
 		this.mockMvc.perform(get("/api/tweetcount")).andExpect(status().isOk());
-		this.mockMvc.perform(get("/livez")).andExpect(status().isOk());
-		this.mockMvc.perform(get("/readyz")).andExpect(status().isOk());
 		this.mockMvc.perform(get("/tweets")).andExpect(status().is3xxRedirection());
 		this.mockMvc.perform(post("/tweetDelete")).andExpect(status().is4xxClientError());
 	}
@@ -57,8 +50,6 @@ class WebSecurityConfigLocalTest {
 	void securityFilterChainAuthenticated() throws Exception {
 		this.mockMvc.perform(get("/")).andExpect(status().isOk());
 		this.mockMvc.perform(get("/login")).andExpect(status().isOk());
-		this.mockMvc.perform(get("/livez")).andExpect(status().isOk());
-		this.mockMvc.perform(get("/readyz")).andExpect(status().isOk());
 		this.mockMvc.perform(get("/api/tweetcount")).andExpect(status().isOk());
 		this.mockMvc.perform(get("/tweets")).andExpect(status().isOk());
 	}

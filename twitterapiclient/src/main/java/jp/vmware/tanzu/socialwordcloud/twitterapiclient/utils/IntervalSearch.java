@@ -72,9 +72,16 @@ public class IntervalSearch implements TweetSearch {
 	public Get2TweetsSearchRecentResponse recentSearch(OffsetDateTime startTime, String nextToken, String sinceId)
 			throws ApiException {
 		String query = String.join(",", hashTags);
-		return apiInstance.tweetsRecentSearch(query).startTime(startTime).sinceId(sinceId).paginationToken(nextToken)
-				.maxResults(maxResults).sortOrder(sortOrder).tweetFields(tweetFields).expansions(expansions)
-				.userFields(userFields).execute();
+		return apiInstance.tweetsRecentSearch(query)
+			.startTime(startTime)
+			.sinceId(sinceId)
+			.paginationToken(nextToken)
+			.maxResults(maxResults)
+			.sortOrder(sortOrder)
+			.tweetFields(tweetFields)
+			.expansions(expansions)
+			.userFields(userFields)
+			.execute();
 	}
 
 	public JsonNode createJson(Tweet tweet, Expansions expansions) {

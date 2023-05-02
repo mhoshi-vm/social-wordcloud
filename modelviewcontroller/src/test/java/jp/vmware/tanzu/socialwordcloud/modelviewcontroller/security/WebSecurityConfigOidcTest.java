@@ -1,6 +1,5 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.security;
 
-import jp.vmware.tanzu.socialwordcloud.library.observability.WfServletSpans;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.SocialMessageMQController;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.WebSocketEventController;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageService;
@@ -28,10 +27,6 @@ class WebSecurityConfigOidcTest {
 
 	@MockBean
 	private SocialMessageTextService socialMessageTextService;
-
-	// Silent WfServletBean
-	@MockBean
-	private WfServletSpans wfServletSpans;
 
 	// Silent TweetMQ
 	@MockBean

@@ -1,5 +1,6 @@
 package jp.vmware.tanzu.socialwordcloud.library.utils;
 
+import io.micrometer.observation.annotation.Observed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

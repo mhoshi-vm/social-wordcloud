@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>wordcloud</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${project.parent.version}</version>
     <name>wordcloud</name>
     <description>wordcloud</description>
 
@@ -26,12 +26,12 @@
                 <dependency>
                     <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
                     <artifactId>modelviewcontroller</artifactId>
-                    <version>0.0.1-SNAPSHOT</version>
+                    <version>${project.parent.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
                     <artifactId>mastodonapiclient</artifactId>
-                    <version>0.0.1-SNAPSHOT</version>
+                    <version>${project.parent.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -41,7 +41,7 @@
                 <dependency>
                     <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
                     <artifactId>modelviewcontroller</artifactId>
-                    <version>0.0.1-SNAPSHOT</version>
+                    <version>${project.parent.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -51,7 +51,7 @@
                 <dependency>
                     <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
                     <artifactId>mastodonapiclient</artifactId>
-                    <version>0.0.1-SNAPSHOT</version>
+                    <version>${project.parent.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -61,7 +61,7 @@
                 <dependency>
                     <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
                     <artifactId>twitterapiclient</artifactId>
-                    <version>0.0.1-SNAPSHOT</version>
+                    <version>${project.parent.version}</version>
                 </dependency>
             </dependencies>
         </profile>

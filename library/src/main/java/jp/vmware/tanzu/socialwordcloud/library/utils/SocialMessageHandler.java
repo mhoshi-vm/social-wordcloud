@@ -1,12 +1,11 @@
 package jp.vmware.tanzu.socialwordcloud.library.utils;
 
-import org.springframework.cloud.sleuth.annotation.NewSpan;
+import io.micrometer.observation.annotation.Observed;
 
 import java.io.IOException;
 
 public interface SocialMessageHandler {
 
-	@NewSpan(name = "tweet-stream-handler")
 	void handle(String tweet) throws IOException, InterruptedException;
 
 }
