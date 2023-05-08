@@ -22,6 +22,9 @@ public class WfEnableOnlyViaBindings implements BindingsPropertiesProcessor {
 			map.put("management.wavefront.api-token", "dummy");
 			map.put("management.tracing.enabled", "false");
 		}
+		else {
+			map.put("management.tracing.sampling.probability", "1.0");
+		}
 	}
 
 }

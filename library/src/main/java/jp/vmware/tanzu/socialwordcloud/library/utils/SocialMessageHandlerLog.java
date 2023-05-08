@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class SocialMessageHandlerLog implements SocialMessageHandler {
 
 	@Override
+	@Observed(name = "handle-social-message", contextualName = "handle-social-message")
 	public void handle(String tweet) {
 		System.out.println(tweet);
 	}

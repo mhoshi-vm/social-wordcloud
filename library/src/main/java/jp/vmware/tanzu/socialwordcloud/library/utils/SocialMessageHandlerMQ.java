@@ -25,6 +25,7 @@ public class SocialMessageHandlerMQ implements SocialMessageHandler {
 	}
 
 	@Override
+	@Observed(name = "handle-social-message", contextualName = "handle-social-message")
 	public void handle(String tweet) {
 		logger.debug("Queue Arrived:" + tweet);
 		if (!tweet.isEmpty()) {

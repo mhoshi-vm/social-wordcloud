@@ -21,6 +21,7 @@ public class SocialMessageHandlerDB implements SocialMessageHandler {
 	}
 
 	@Override
+	@Observed(name = "handle-social-message", contextualName = "handle-social-message")
 	public void handle(String tweet) throws IOException, InterruptedException {
 		socialMessageStreamService.handler(tweet);
 		socialMessageStreamService.notifyTweetEvent(tweet);

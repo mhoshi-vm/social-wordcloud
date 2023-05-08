@@ -19,8 +19,6 @@ import java.io.StringReader;
 @Configuration
 public class WfServiceSpans {
 
-	Logger logger = LoggerFactory.getLogger(WfServiceSpans.class);
-
 	public final String dbType;
 
 	public final String dbInstance;
@@ -28,6 +26,10 @@ public class WfServiceSpans {
 	public final String appName;
 
 	public final String inboundServiceType;
+
+	private final String socialOrigin;
+
+	Logger logger = LoggerFactory.getLogger(WfServiceSpans.class);
 
 	CCJSqlParserManager ccjSqlParserManager;
 
@@ -37,13 +39,15 @@ public class WfServiceSpans {
 
 	public WfServiceSpans(@Value("${db.type:localdb}") String dbType, @Value("${db.instance:local}") String dbInstance,
 			@Value("${app.name}") String appName,
-			@Value("${inboundExternalService.serviceType:LB}") String inboundServiceType) {
+			@Value("${inboundExternalService.serviceType:LB}") String inboundServiceType,
+			@Value("${social.origin:Social}") String socialOrigin) {
 		this.dbType = dbType;
 		this.dbInstance = dbInstance;
 		this.appName = appName;
 		this.ccjSqlParserManager = new CCJSqlParserManager();
 		this.tablesNamesFinder = new TablesNamesFinder();
 		this.inboundServiceType = inboundServiceType;
+		this.socialOrigin = socialOrigin;
 
 	}
 
@@ -53,6 +57,7 @@ public class WfServiceSpans {
 		return new SpanHandler() {
 			@Override
 			public boolean end(TraceContext traceContext, MutableSpan span, Cause cause) {
+				logger.debug("New Span!!");
 				logger.debug("Span name : " + span.name());
 				logger.debug("Span kind : " + span.kind());
 				logger.debug("Span Remote Source :" + span.remoteServiceName());
@@ -116,6 +121,26 @@ public class WfServiceSpans {
 							span.tag("_inboundExternalService", inboundServiceType);
 							span.tag("_externalApplication", appName);
 							span.tag("_externalComponent", inboundServiceType);
+						}
+					}
+				}
+
+				return true;
+			}
+		};
+	}
+
+	@Bean
+	SpanHandler spanSocialHandler() {
+		return new SpanHandler() {
+			@Override
+			public boolean end(TraceContext traceContext, MutableSpan span, Cause cause) {
+				if (span.name().equals("handle-social-message")) {
+					for (int i = 0; i < span.tagCount(); i++) {
+						if (span.tagKeyAt(i).startsWith("http.url")) {
+							span.tag("_inboundExternalService", socialOrigin);
+							span.tag("_externalApplication", appName);
+							span.tag("_externalComponent", "api-endpoint");
 						}
 					}
 				}
