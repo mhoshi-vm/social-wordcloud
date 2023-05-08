@@ -19,6 +19,7 @@
             <th class="left">Text</th>
             <th class="left">Username</th>
             <th class="left">Created</th>
+            <th class="left">Sentiment</th>
             <th class="left">Delete</th>
         </tr>
         </thead>
@@ -29,6 +30,7 @@
             <td class="left" th:text="${tweet.context}"></td>
             <td class="left" th:text="${tweet.username}"></td>
             <td class="left" th:text="${tweet.createDateTime}"></td>
+            <td class="left" th:text="${tweet.negativeSentiment}"></td>
             <td>
                 <form th:action="@{/tweetDelete}" th:object="${tweetDel}" method="post">
                     <input type="hidden" name="messageId" th:value="${tweet.messageId}">

@@ -15,9 +15,18 @@ public class PostgresEnabledViaBindings implements BindingsPropertiesProcessor {
 	@Override
 	public void process(Environment environment, Bindings bindings, Map<String, Object> map) {
 
-		List<Binding> rmqBindings = bindings.filterBindings(TYPE);
-		if (rmqBindings.size() > 0) {
+		List<Binding> postgresBindings = bindings.filterBindings(TYPE);
+		if (postgresBindings.size() > 0) {
 			map.put("db.type", "postgresql");
+			if (postgresBindings.get(0).getSecret().get("greenplum") != null) {
+				map.put("database", "greenplum");
+			}
+			else {
+				map.put("database", "postgres");
+			}
+		}
+		else {
+			map.put("database", "h2");
 		}
 
 	}

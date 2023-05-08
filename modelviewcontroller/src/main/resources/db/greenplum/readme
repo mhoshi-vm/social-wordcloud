@@ -1,0 +1,18 @@
+createdb wordcloud
+createlang plpythonu -d wordcloud
+# The following is only for demo purpose
+psql -d wordcloud -c "CREATE USER wcadmin SUPERUSER LOGIN PASSWORD 'wcadmin'"
+psql -d wordcloud -c "GRANT ALL PRIVILEGES ON DATABASE wordcloud TO wcadmin"
+```
+CREATE FUNCTION tweet_sent_vader_check(tweet text)
+    RETURNS float
+AS $$
+  import nltk.sentiment.vader
+  from nltk.sentiment.vader import SentimentIntensityAnalyzer
+  sid = SentimentIntensityAnalyzer()
+  return sid.polarity_scores(tweet)['neg']
+$$ LANGUAGE plpythonu;
+
+```
+echo 'host  wordcloud  wcadmin  0.0.0.0/0  password' >> /gpdata/master/gpseg-1/pg_hba.conf
+gpstop -u
