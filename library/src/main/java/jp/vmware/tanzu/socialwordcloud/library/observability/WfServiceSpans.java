@@ -88,6 +88,21 @@ public class WfServiceSpans {
 						span.tag("_externalComponent", dbType);
 					}
 				}
+
+				String remoteService = span.remoteServiceName();
+
+				if (remoteService != null) {
+					if (remoteService.equals("redis")) {
+						span.tag("_outboundExternalService", "Redis");
+						span.tag("_externalApplication", appName);
+						span.tag("_externalComponent", "Redis");
+					}
+					else if (remoteService.equals("RabbitMQ")) {
+						span.tag("_outboundExternalService", "RabbitMQ");
+						span.tag("_externalApplication", appName);
+						span.tag("_externalComponent", "RabbitMQ");
+					}
+				}
 				return true;
 			}
 		};

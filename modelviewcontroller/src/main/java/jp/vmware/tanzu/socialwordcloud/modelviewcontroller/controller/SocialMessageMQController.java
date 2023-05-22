@@ -20,7 +20,6 @@ public class SocialMessageMQController {
 		this.socialMessageStreamService = socialMessageStreamService;
 	}
 
-	@Observed(name = "receive-social-message-rabbitmq", contextualName = "receive-social-message-rabbitmq")
 	@RabbitListener(queues = "${message.queue.queue}")
 	public void tweetHandle(String tweet) throws InterruptedException {
 		logger.debug("Queue Received : " + tweet);
@@ -35,7 +34,6 @@ public class SocialMessageMQController {
 		}
 	}
 
-	@Observed(name = "notification-rabbitmq", contextualName = "notification-rabbitmq")
 	@RabbitListener(queues = "#{mvcMQConfiguration.getNotificationQueue()}")
 	public void notificationHandle(String tweet) {
 		logger.debug("Queue Received : " + tweet);
