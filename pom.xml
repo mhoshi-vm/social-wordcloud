@@ -25,7 +25,7 @@
         <kuromoji.version>0.9.0</kuromoji.version>
         <jsoup.version>1.16.1</jsoup.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
-        <spring-javaformat-maven-plugin.version>0.0.38</spring-javaformat-maven-plugin.version>
+        <spring-javaformat-maven-plugin.version>0.0.39</spring-javaformat-maven-plugin.version>
 
         <!-- Web dependencies -->
         <webjars-bootstrap.version>5.2.3</webjars-bootstrap.version>
