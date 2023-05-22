@@ -115,11 +115,11 @@ public class WfServiceSpans {
 	}
 
 	@Bean
-	SpanHandler spanSocialHandler() {
+	SpanHandler spanRabbitMQHandler() {
 		return new SpanHandler() {
 			@Override
 			public boolean end(TraceContext traceContext, MutableSpan span, Cause cause) {
-				if (span.name().endsWith("-rabbtimq")) {
+				if (span.name().endsWith("-rabbitmq")) {
 					span.tag("_outboundExternalService", "RabbitMQ");
 					span.tag("_externalApplication", appName);
 					span.tag("_externalComponent", "RabbitMQ");
