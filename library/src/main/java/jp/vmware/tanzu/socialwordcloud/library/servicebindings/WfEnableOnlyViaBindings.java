@@ -1,5 +1,6 @@
 package jp.vmware.tanzu.socialwordcloud.library.servicebindings;
 
+import org.springframework.boot.context.properties.PropertyMapper;
 import org.springframework.cloud.bindings.Binding;
 import org.springframework.cloud.bindings.Bindings;
 import org.springframework.cloud.bindings.boot.BindingsPropertiesProcessor;
@@ -25,6 +26,30 @@ public class WfEnableOnlyViaBindings implements BindingsPropertiesProcessor {
 		else {
 			map.put("management.tracing.sampling.probability", "1.0");
 		}
+		bindings.filterBindings(TYPE).forEach(binding -> {
+			var mapper = new WfEnableOnlyViaBindings.BindingPropertiesMapper(binding.getSecret(), map);
+			mapper.map("api-token", "management.wavefront.api-token");
+			mapper.map("uri", "management.wavefront.uri");
+		});
+	}
+	static class BindingPropertiesMapper {
+
+		private final Map<String, String> secret;
+
+		private final Map<String, Object> properties;
+
+		private final PropertyMapper mapper;
+
+		public BindingPropertiesMapper(Map<String, String> secret, Map<String, Object> properties) {
+			this.secret = secret;
+			this.properties = properties;
+			this.mapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		}
+
+		public void map(String from, String to) {
+			mapper.from(secret.get(from)).to(value -> this.properties.put(to, value));
+		}
+
 	}
 
 }
