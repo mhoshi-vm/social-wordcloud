@@ -2,6 +2,10 @@ package jp.vmware.tanzu.socialwordcloud.library.observability;
 
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.aop.ObservedAspect;
+import jakarta.annotation.PostConstruct;
+import org.springframework.amqp.rabbit.config.ContainerCustomizer;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,4 +18,19 @@ class ObserveConfiguration {
 		return new ObservedAspect(observationRegistry);
 	}
 
+	final RabbitTemplate rabbitTemplate;
+
+	public ObserveConfiguration(RabbitTemplate rabbitTemplate) {
+		this.rabbitTemplate = rabbitTemplate;
+	}
+
+	@PostConstruct
+	void setup() {
+		this.rabbitTemplate.setObservationEnabled(true);
+	}
+
+	@Bean
+	ContainerCustomizer<SimpleMessageListenerContainer> containerCustomizer() {
+		return (container) -> container.setObservationEnabled(true);
+	}
 }

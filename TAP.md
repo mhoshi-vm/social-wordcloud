@@ -109,11 +109,11 @@ EOF
 
 **From developer namespace (if required change via `kubectl config set-context --current --namespace=<developer_namespace>`)** perform the claim.  
 ```
-tanzu services claim create rmq-claim --resource-name rmq-1 --resource-kind RabbitmqCluster --resource-api-version rabbitmq.com/v1beta1 --resource-namespace service-instances
-tanzu services claim create mastodon-claim --resource-name production-mastodon --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
+tanzu service class-claim create rmq-claim --class dynamic-rabbitmq
+anzu services claim create mastodon-claim --resource-name production-mastodon --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
 tanzu services claim create wavefront-claim --resource-name production-wavefront --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
 tanzu services claim create postgres-claim --resource-name postgres-11 --resource-kind Postgres --resource-api-version sql.tanzu.vmware.com/v1 --resource-namespace service-instances
-tanzu services claim create gemfire-claim --resource-name gemfire-redis1 --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
+tanzu service class-claim create gemfire-claim --class dynamic-gemfire
 tanzu services claim create sso-claim --resource-name basic-client-registration --resource-kind ClientRegistration --resource-api-version sso.apps.tanzu.vmware.com/v1alpha1 --resource-namespace service-instances
 ```
 
@@ -124,6 +124,7 @@ Run the mvc-app in the following way.
 
 ```
 RESOURCE_CLAIM="services.apps.tanzu.vmware.com/v1alpha1:ResourceClaim"
+CLASS_CLAIM="services.apps.tanzu.vmware.com/v1alpha1:ClassClaim"
 tanzu apps workload apply wordcloud \
     --type web \
     --label app.kubernetes.io/part-of=wordcloud \
@@ -132,11 +133,12 @@ tanzu apps workload apply wordcloud \
     --param-yaml api_descriptor='{"description":"Twitter Wordcloud","location":{"path":"/v3/api-docs"},"owner":"demo","system":"dev","type":"openapi"}' \
     --service-ref "sso=${RESOURCE_CLAIM}:sso-claim" \
     --service-ref "postgres=${RESOURCE_CLAIM}:postgres-claim" \
-    --service-ref "rabbitmq=${RESOURCE_CLAIM}:rmq-claim" \
-    --service-ref "redis=${RESOURCE_CLAIM}:gemfire-claim" \
+    --service-ref "rabbitmq=${CLASS_CLAIM}:rmq-claim" \
+    --service-ref "redis=${CLASS_CLAIM}:gemfire-claim" \
     --service-ref "wavefront=${RESOURCE_CLAIM}:wavefront-claim" \
     --param "clusterBuilder=base-jammy" \
     --build-env "BP_MAVEN_BUILT_MODULE=wordcloud" \
+    --build-env "BP_JVM_VERSION=17" \
     --build-env BP_MAVEN_BUILD_ARGUMENTS="-pl wordcloud -am -P modelviewcontroller package" \
     --env "SERVICE_NAME=mvc" \
     --env "JAVA_TOOL_OPTIONS=-Dmanagement.health.probes.enabled='false'" \
@@ -150,16 +152,18 @@ Run the Twitter api client app in the following way.
 
 ```
 RESOURCE_CLAIM="services.apps.tanzu.vmware.com/v1alpha1:ResourceClaim"
-tanzu apps workload apply social-api-client \
+CLASS_CLAIM="services.apps.tanzu.vmware.com/v1alpha1:ClassClaim"
+tanzu apps workload apply twitter-api-client \
     --type server \
     --label app.kubernetes.io/part-of=wordcloud \
     --label apps.tanzu.vmware.com/has-tests=true \
-    --service-ref "rabbitmq=${RESOURCE_CLAIM}:rmq-claim" \
-    --service-ref "twitter=${RESOURCE_CLAIM}:mastodon-claim" \
+    --service-ref "rabbitmq=${CLASS_CLAIM}:rmq-claim" \
+    --service-ref "twitter=${RESOURCE_CLAIM}:twitter-claim" \
     --service-ref "wavefront=${RESOURCE_CLAIM}:wavefront-claim" \
     --build-env "BP_MAVEN_BUILT_MODULE=wordcloud" \
-    --build-env BP_MAVEN_BUILD_ARGUMENTS="-pl wordcloud -am -P mastodonapiclient package" \
-    --env "SERVICE_NAME=mastodonclient" \
+    --build-env "BP_JVM_VERSION=17" \
+    --build-env BP_MAVEN_BUILD_ARGUMENTS="-pl wordcloud -am -P twitterapiclient package" \
+    --env "SERVICE_NAME=twitterclient" \
     --env "JAVA_TOOL_OPTIONS=-Dmanagement.health.probes.enabled='false'" \
     --param-yaml buildServiceBindings='[{"name": "bucketrepo-settings-xml", "kind": "Secret"}]' \
     --git-repo https://github.com/mhoshi-vm/social-wordcloud \
