@@ -1,10 +1,10 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,6 +21,8 @@ public class SocialMessage {
 	public String username;
 
 	public String lang;
+
+	public Float negativeSentiment;
 
 	@CreationTimestamp
 	public LocalDateTime createDateTime;

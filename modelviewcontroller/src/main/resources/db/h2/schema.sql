@@ -6,7 +6,8 @@ CREATE TABLE social_message (
     create_date_time TIMESTAMP(6),
     lang VARCHAR(255),
     origin VARCHAR(255),
-    username VARCHAR(255), PRIMARY KEY (message_id)
+    username VARCHAR(255),
+    negative_sentiment FLOAT, PRIMARY KEY (message_id)
 );
 
 CREATE TABLE social_message_text (

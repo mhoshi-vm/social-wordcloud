@@ -1,10 +1,10 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service;
 
+import jakarta.transaction.Transactional;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageTextRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
 import java.util.List;
 
 @Service

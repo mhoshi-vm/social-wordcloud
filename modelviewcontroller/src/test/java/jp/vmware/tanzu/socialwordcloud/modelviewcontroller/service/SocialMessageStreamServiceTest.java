@@ -37,7 +37,7 @@ class SocialMessageStreamServiceTest {
 	@BeforeEach
 	void setup() {
 		this.socialMessageStreamService = new SocialMessageStreamService(socialMessageRepository,
-				socialMessageTextRepository, morphologicalAnalysis, "ja");
+				socialMessageTextRepository, morphologicalAnalysis, "ja", "postgres");
 
 		this.spySocialMessageStreamService = Mockito.spy(socialMessageStreamService);
 

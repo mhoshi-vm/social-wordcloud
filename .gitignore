@@ -42,4 +42,4 @@ bindings/twitter/bearer-token
 /stateless/src/main/resources/static/built/
 /modelviewcontroller/src/main/resources/static/built/
 /bindings/mastodon/access-token
-/bindings/wavefront/api-token
+/wavefront/api-token

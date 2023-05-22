@@ -20,6 +20,7 @@ public class PostgresEnabledViaBindings implements BindingsPropertiesProcessor {
 			map.put("db.type", "postgresql");
 			if (postgresBindings.get(0).getSecret().get("greenplum") != null) {
 				map.put("database", "greenplum");
+				map.put("spring.sql.init.mode", "never");
 			}
 			else {
 				map.put("database", "postgres");

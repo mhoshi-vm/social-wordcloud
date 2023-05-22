@@ -35,14 +35,17 @@ public class SocialMessageStreamService {
 
 	public String lang;
 
+	public String database;
+
 	Pattern nonLetterPattern;
 
 	public SocialMessageStreamService(SocialMessageRepository socialMessageRepository,
 			SocialMessageTextRepository socialMessageTextRepository, MorphologicalAnalysis morphologicalAnalysis,
-			@Value("${twitter.search.lang}") String lang) {
+			@Value("${twitter.search.lang}") String lang, @Value("${database}") String database) {
 		this.socialMessageRepository = socialMessageRepository;
 		this.socialMessageTextRepository = socialMessageTextRepository;
 		this.lang = lang;
+		this.database = database;
 		this.morphologicalAnalysis = morphologicalAnalysis;
 		this.emitters = new CopyOnWriteArrayList<>();
 		this.nonLetterPattern = Pattern.compile("^\\W+$", Pattern.UNICODE_CHARACTER_CLASS);
@@ -65,7 +68,9 @@ public class SocialMessageStreamService {
 		logger.debug("Handling Tweet : " + socialMessage.getContext());
 
 		socialMessageRepository.save(socialMessage);
-
+		if (database.equals("greenplum")) {
+			socialMessageRepository.updateNegativeSentiment(socialMessage.getMessageId());
+		}
 		boolean nextSkip = false;
 
 		for (String text : morphologicalAnalysis.getToken(socialMessage.getContext())) {
