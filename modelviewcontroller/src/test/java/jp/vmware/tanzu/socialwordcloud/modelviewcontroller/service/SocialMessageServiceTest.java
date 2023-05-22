@@ -30,7 +30,7 @@ class SocialMessageServiceTest {
 	}
 
 	@Test
-	void findAllByOrderByTweetIdDesc() {
+	void findAllByOrderByCreateDateTimeDesc() {
 
 		SocialMessage socialMessage1 = new SocialMessage();
 		socialMessage1.setMessageId("1111");
@@ -53,10 +53,10 @@ class SocialMessageServiceTest {
 
 		socialMessageRepository.save(socialMessage3);
 
-		List<SocialMessage> socialMessages = socialMessageService.findAllByOrderByMessageIdDesc();
+		List<SocialMessage> socialMessages = socialMessageService.findAllByOrderByCreateDateTimeDesc();
 		assertEquals("2222", socialMessages.get(0).getMessageId());
-		assertEquals("1111", socialMessages.get(1).getMessageId());
-		assertEquals("1100", socialMessages.get(2).getMessageId());
+		assertEquals("1100", socialMessages.get(1).getMessageId());
+		assertEquals("1111", socialMessages.get(2).getMessageId());
 	}
 
 	@Test

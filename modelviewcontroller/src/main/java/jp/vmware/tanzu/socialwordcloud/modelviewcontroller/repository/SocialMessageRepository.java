@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface SocialMessageRepository extends CrudRepository<SocialMessage, Integer> {
 
-	List<SocialMessage> findAllByOrderByMessageIdDesc();
+	List<SocialMessage> findAllByOrderByCreateDateTimeDesc();
 
 	long deleteByMessageId(String tweetId);
 

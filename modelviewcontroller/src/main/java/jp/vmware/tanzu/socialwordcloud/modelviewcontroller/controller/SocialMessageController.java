@@ -20,7 +20,7 @@ public class SocialMessageController {
 	@GetMapping({ "/tweets" })
 	public ModelAndView getAllTweets() {
 		ModelAndView mav = new ModelAndView("tweets");
-		mav.addObject("tweets", socialMessageService.findAllByOrderByMessageIdDesc());
+		mav.addObject("tweets", socialMessageService.findAllByOrderByCreateDateTimeDesc());
 
 		return mav;
 	}
@@ -29,7 +29,7 @@ public class SocialMessageController {
 	public ModelAndView deleteTweet(@ModelAttribute(value = "tweetDel") SocialMessage socialMessage) {
 		socialMessageService.deleteMessage(socialMessage.getMessageId());
 		ModelAndView mav = new ModelAndView("tweets");
-		mav.addObject("tweets", socialMessageService.findAllByOrderByMessageIdDesc());
+		mav.addObject("tweets", socialMessageService.findAllByOrderByCreateDateTimeDesc());
 		return mav;
 	}
 

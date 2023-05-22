@@ -21,8 +21,8 @@ public class SocialMessageService {
 		this.socialMessageTextRepository = socialMessageTextRepository;
 	}
 
-	public List<SocialMessage> findAllByOrderByMessageIdDesc() {
-		return socialMessageRepository.findAllByOrderByMessageIdDesc();
+	public List<SocialMessage> findAllByOrderByCreateDateTimeDesc() {
+		return socialMessageRepository.findAllByOrderByCreateDateTimeDesc();
 	}
 
 	@Transactional

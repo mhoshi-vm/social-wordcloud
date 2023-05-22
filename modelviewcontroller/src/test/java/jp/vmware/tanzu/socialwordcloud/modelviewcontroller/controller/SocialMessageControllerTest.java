@@ -44,7 +44,7 @@ class SocialMessageControllerTest {
 		socialMessageList.add(socialMessage1);
 		socialMessageList.add(socialMessage2);
 
-		when(socialMessageService.findAllByOrderByMessageIdDesc()).thenReturn(socialMessageList);
+		when(socialMessageService.findAllByOrderByCreateDateTimeDesc()).thenReturn(socialMessageList);
 
 		mockMvc.perform(get("/tweets"))
 			.andExpect(status().isOk())
@@ -64,7 +64,7 @@ class SocialMessageControllerTest {
 
 		socialMessageList.add(socialMessage1);
 
-		when(socialMessageService.findAllByOrderByMessageIdDesc()).thenReturn(null);
+		when(socialMessageService.findAllByOrderByCreateDateTimeDesc()).thenReturn(null);
 
 		mockMvc.perform(post("/tweetDelete").flashAttr("tweetDel", socialMessage1)).andExpect(status().isOk());
 	}

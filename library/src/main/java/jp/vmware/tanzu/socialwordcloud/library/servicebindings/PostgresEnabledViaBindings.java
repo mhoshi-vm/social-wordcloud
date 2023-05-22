@@ -21,6 +21,7 @@ public class PostgresEnabledViaBindings implements BindingsPropertiesProcessor {
 			if (postgresBindings.get(0).getSecret().get("greenplum") != null) {
 				map.put("database", "greenplum");
 				map.put("spring.sql.init.mode", "never");
+				map.put("db.instance", "Greenplum DB");
 			}
 			else {
 				map.put("database", "postgres");
