@@ -32,6 +32,7 @@ public class WfEnableOnlyViaBindings implements BindingsPropertiesProcessor {
 			mapper.map("uri", "management.wavefront.uri");
 		});
 	}
+
 	static class BindingPropertiesMapper {
 
 		private final Map<String, String> secret;

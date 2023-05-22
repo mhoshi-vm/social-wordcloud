@@ -1,6 +1,9 @@
 package jp.vmware.tanzu.socialwordcloud.library.utils;
 
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.annotation.Observed;
+import io.micrometer.tracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -14,23 +17,31 @@ public class SocialMessageHandlerMQ implements SocialMessageHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(SocialMessageHandlerMQ.class);
 
+	public final Tracer tracer;
+
+	public final ObservationRegistry observationRegistry;
+
 	public String exchangeName;
 
 	RabbitTemplate rabbitTemplate;
 
-	public SocialMessageHandlerMQ(RabbitTemplate rabbitTemplate,
+	public SocialMessageHandlerMQ(Tracer tracer, ObservationRegistry observationRegistry, RabbitTemplate rabbitTemplate,
 			@Value("${message.queue.exchange}") String exchangeName) {
 		this.rabbitTemplate = rabbitTemplate;
+		this.observationRegistry = observationRegistry;
+		this.tracer = tracer;
 		this.exchangeName = exchangeName;
 	}
 
 	@Override
-	@Observed(name = "handle-social-message", contextualName = "handle-social-message")
+	@Observed(name = "handle-social-message-rabbitmq", contextualName = "handle-social-message-rabbitmq")
 	public void handle(String tweet) {
 		logger.debug("Queue Arrived:" + tweet);
 		if (!tweet.isEmpty()) {
-			logger.debug("Queue Sent:" + tweet);
-			this.rabbitTemplate.convertAndSend(exchangeName, "", tweet);
+			Observation.createNotStarted("rabbit-producer", this.observationRegistry).observe(() -> {
+				logger.debug("Queue Sent:" + tweet);
+				this.rabbitTemplate.convertAndSend(exchangeName, "", tweet);
+			});
 		}
 	}
 

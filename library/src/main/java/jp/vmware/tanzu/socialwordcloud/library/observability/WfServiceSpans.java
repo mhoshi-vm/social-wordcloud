@@ -88,22 +88,6 @@ public class WfServiceSpans {
 						span.tag("_externalComponent", dbType);
 					}
 				}
-
-				String remoteService = span.remoteServiceName();
-
-				if (remoteService != null) {
-					if (remoteService.equals("redis")) {
-						span.tag("_outboundExternalService", "Redis");
-						span.tag("_externalApplication", appName);
-						span.tag("_externalComponent", "Redis");
-					}
-					else if (remoteService.equals("rabbitmq")) {
-						span.tag("_outboundExternalService", "RabbitMQ");
-						span.tag("_externalApplication", appName);
-						span.tag("_externalComponent", "RabbitMQ");
-					}
-				}
-
 				return true;
 			}
 		};
@@ -135,16 +119,11 @@ public class WfServiceSpans {
 		return new SpanHandler() {
 			@Override
 			public boolean end(TraceContext traceContext, MutableSpan span, Cause cause) {
-				if (span.name().equals("handle-social-message")) {
-					for (int i = 0; i < span.tagCount(); i++) {
-						if (span.tagKeyAt(i).startsWith("http.url")) {
-							span.tag("_inboundExternalService", socialOrigin);
-							span.tag("_externalApplication", appName);
-							span.tag("_externalComponent", "api-endpoint");
-						}
-					}
+				if (span.name().endsWith("-rabbtimq")) {
+					span.tag("_outboundExternalService", "RabbitMQ");
+					span.tag("_externalApplication", appName);
+					span.tag("_externalComponent", "RabbitMQ");
 				}
-
 				return true;
 			}
 		};
