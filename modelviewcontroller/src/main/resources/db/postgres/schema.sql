@@ -2,7 +2,7 @@ CREATE SEQUENCE IF NOT EXISTS social_message_text_seq START WITH 1 INCREMENT BY 
 
 CREATE TABLE IF NOT EXISTS social_message (
     message_id VARCHAR(255) NOT NULL,
-    context CLOB,
+    context VARCHAR(65535),
     create_date_time TIMESTAMP(6),
     lang VARCHAR(255),
     origin VARCHAR(255),
