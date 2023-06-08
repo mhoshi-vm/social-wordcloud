@@ -4,10 +4,12 @@ import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessageTe
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageRepository;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageTextRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -53,10 +55,10 @@ class SocialMessageServiceTest {
 
 		socialMessageRepository.save(socialMessage3);
 
-		List<SocialMessage> socialMessages = socialMessageService.findAllByOrderByCreateDateTimeDesc();
-		assertEquals("2222", socialMessages.get(0).getMessageId());
-		assertEquals("1100", socialMessages.get(1).getMessageId());
-		assertEquals("1111", socialMessages.get(2).getMessageId());
+		Page<SocialMessage> socialMessages = socialMessageService.findAll(0,100,"createDateTime");
+		assertEquals("2222", socialMessages.getContent().get(0).getMessageId());
+		assertEquals("1100", socialMessages.getContent().get(1).getMessageId());
+		assertEquals("1111", socialMessages.getContent().get(2).getMessageId());
 	}
 
 	@Test

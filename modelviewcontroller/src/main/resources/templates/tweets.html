@@ -1,15 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Tweets</title>
-    <link rel="stylesheet" href="/webjars/clr__ui/clr-ui.min.css"/>
+    <link href="/webjars/clr__ui/clr-ui.min.css" rel="stylesheet"/>
+    <script th:src="@{/webjars/bootstrap/dist/js/bootstrap.min.js}" type="text/javascript"></script>
 </head>
 <body>
 
 <div th:replace="~{fragments/header.html :: header}"></div>
 
-<div style="margin-left : 1em; margin-right : 1em ;" class="container">
+
+<div class="container" style="margin-left : 1em; margin-right : 1em ;">
+    <div class="clr-row" style="margin-top: 10px; margin-left: 3px">
+
+        <div class="btn-group btn-outline-primary btn-sm">
+            <a th:replace="~{fragments/paging :: paging(1, '<<', ${currentPage == 1} ? 'disabled' : '', ${currentPage == 1} ? 'false' : 'true')}"></a>
+            <a th:replace="~{fragments/paging :: paging(${currentPage - 1}, 'Prev', ${currentPage == 1} ? 'disabled' : '', ${currentPage == 1} ? 'false' : 'true')}"></a>
+            <a th:if="${currentPage - 2 > 0}">
+                <a th:replace="~{fragments/paging :: paging(${currentPage - 2}, '...', '', 'true')}"></a>
+            </a>
+            <a th:each="page : ${#numbers.sequence(
+                    (currentPage > 1 ? currentPage - 1 : 1 ),
+                    (currentPage + 1 < totalPages ? currentPage + 1 :
+                    (totalPages == 0 ? 1 : totalPages)))}">
+                <a th:replace="~{fragments/paging :: paging(${page}, ${page}, ${(page == currentPage ? 'active ': '' ) + (totalPages == 0 ? 'disabled' : '')}, ${totalPages == 0} ? 'false' : 'true')}"></a>
+            </a>
+            <a th:if="${currentPage + 2 <= totalPages}">
+                <a th:replace="~{fragments/paging :: paging(${currentPage + 2}, '...', '', 'true')}"></a>
+            </a>
+            <a th:replace="~{fragments/paging :: paging(${currentPage + 1},'Next', ${currentPage >= totalPages} ? 'disabled' : '', ${currentPage >= totalPages} ? 'false' : 'true')}"></a>
+            <a th:replace="~{fragments/paging :: paging(${totalPages}, '>>', ${currentPage >= totalPages} ? 'disabled': '' , ${currentPage >= totalPages} ? 'false' : 'true')}"></a>
+        </div>
+
+        <div>
+            Total Tweets: [[${totalItems}]]
+        </div>
+
+
+        <div class="clr-select-wrapper" style="margin-left: 20px">
+
+            <form th:action="@{/tweets}" method="get" name="sort">
+
+            <select onchange="sort.submit()" id="sort-select" name="sortBy">
+                <option value="createDateTime">Created</option>
+                <option value="messageId">ID</option>
+                <option value="origin">Origin</option>
+                <option value="text">Text</option>
+                <option value="username">Username</option>
+                <option value="negativeSentiment">Sentiment</option>
+            </select>
+            </form>
+        </div>
+
+    </div>
+
+
     <table class="table">
 
         <thead>
@@ -32,13 +78,13 @@
             <td class="left" th:text="${tweet.createDateTime}"></td>
             <td class="left" th:text="${tweet.negativeSentiment}"></td>
             <td>
-                <form th:action="@{/tweetDelete}" th:object="${tweetDel}" method="post">
-                    <input type="hidden" name="messageId" th:value="${tweet.messageId}">
-                    <input type="hidden" name="origin" th:value="${tweet.origin}">
-                    <input type="hidden" name="context" th:value="${tweet.context}">
-                    <input type="hidden" name="username" th:value="${tweet.username}">
-                    <input type="hidden" name="createDateTime" th:value="${tweet.createDateTime}">
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                <form method="post" th:action="@{/tweetDelete}" th:object="${tweetDel}">
+                    <input name="messageId" th:value="${tweet.messageId}" type="hidden">
+                    <input name="origin" th:value="${tweet.origin}" type="hidden">
+                    <input name="context" th:value="${tweet.context}" type="hidden">
+                    <input name="username" th:value="${tweet.username}" type="hidden">
+                    <input name="createDateTime" th:value="${tweet.createDateTime}" type="hidden">
+                    <button class="btn btn-danger" type="submit">Delete</button>
                 </form>
             </td>
         </tr>
@@ -47,4 +93,3 @@
 </div>
 </body>
 </html>
-

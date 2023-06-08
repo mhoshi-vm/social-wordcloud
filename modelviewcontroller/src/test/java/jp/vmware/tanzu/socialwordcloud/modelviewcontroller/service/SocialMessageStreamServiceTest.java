@@ -56,7 +56,7 @@ class SocialMessageStreamServiceTest {
 
 		spySocialMessageStreamService.handler("this is test");
 
-		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByCreateDateTimeDesc();
+		List<SocialMessage> socialMessages = socialMessageRepository.findAll();
 		assertEquals(1, socialMessages.size());
 
 		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
@@ -75,7 +75,7 @@ class SocialMessageStreamServiceTest {
 	void returnWhenLineIsEmpty() throws IOException, InterruptedException {
 		spySocialMessageStreamService.handler("");
 
-		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByCreateDateTimeDesc();
+		List<SocialMessage> socialMessages = socialMessageRepository.findAll();
 		assertEquals(0, socialMessages.size());
 
 		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
@@ -87,7 +87,7 @@ class SocialMessageStreamServiceTest {
 	void doNothingOnNonJson() throws IOException, InterruptedException {
 		spySocialMessageStreamService.handler("dd");
 
-		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByCreateDateTimeDesc();
+		List<SocialMessage> socialMessages = socialMessageRepository.findAll();
 		assertEquals(0, socialMessages.size());
 
 		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository
@@ -108,7 +108,7 @@ class SocialMessageStreamServiceTest {
 
 		spySocialMessageStreamService.handler("this is test");
 
-		List<SocialMessage> socialMessages = socialMessageRepository.findAllByOrderByCreateDateTimeDesc();
+		List<SocialMessage> socialMessages = socialMessageRepository.findAll();
 		assertEquals(1, socialMessages.size());
 
 		List<SocialMessageTextRepository.TextCount> textCounts = socialMessageTextRepository

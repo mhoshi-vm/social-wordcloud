@@ -1,0 +1,11 @@
+<a th:fragment="paging(pageNum, label, classAppend, actionEnabled)">
+    <a th:if="${actionEnabled == 'true'}">
+        <form th:action="@{/tweets}" method="get">
+            <input type="hidden" name="pageNum" th:value="${pageNum}">
+            <button class="btn" th:classappend="${classAppend}">[[${label}]]</button>
+        </form>
+    </a>
+    <a th:if="${actionEnabled == 'false'}">
+        <button class="btn" th:classappend="${classAppend}">[[${label}]]</button>
+    </a>
+</a>
