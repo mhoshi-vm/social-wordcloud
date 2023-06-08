@@ -43,17 +43,19 @@ class ObserveConfiguration {
 	public ClientResources clientResources(ObservationRegistry observationRegistry) {
 
 		return ClientResources.builder()
-				.tracing(new MicrometerTracingAdapter(observationRegistry, "my-redis-cache"))
-				.build();
+			.tracing(new MicrometerTracingAdapter(observationRegistry, "my-redis-cache"))
+			.build();
 	}
 
 	@Bean
 	public LettuceConnectionFactory lettuceConnectionFactory(ClientResources clientResources) {
 
 		LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
-				.clientResources(clientResources).build();
+			.clientResources(clientResources)
+			.build();
 		RedisConfiguration redisConfiguration = new RedisConfiguration() {
 		};
 		return new LettuceConnectionFactory(redisConfiguration, clientConfig);
 	}
+
 }

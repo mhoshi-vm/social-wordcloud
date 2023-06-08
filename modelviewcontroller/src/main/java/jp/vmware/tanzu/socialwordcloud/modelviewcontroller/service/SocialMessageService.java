@@ -24,7 +24,7 @@ public class SocialMessageService {
 	}
 
 	public Page<SocialMessage> findAll(int pageNum, int pageSize, String sortBy) {
-		Pageable pageable = PageRequest.of(pageNum , pageSize, Sort.by(sortBy).descending());
+		Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(sortBy).descending());
 		return socialMessageRepository.findAll(pageable);
 	}
 

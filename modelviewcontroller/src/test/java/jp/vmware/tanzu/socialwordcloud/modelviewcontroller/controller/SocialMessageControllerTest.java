@@ -53,13 +53,13 @@ class SocialMessageControllerTest {
 		socialMessageList.add(socialMessage1);
 		socialMessageList.add(socialMessage2);
 
-		Page<SocialMessage> pro= Mockito.mock(Page.class);
+		Page<SocialMessage> pro = Mockito.mock(Page.class);
 
 		Mockito.when(pro.getContent()).thenReturn(socialMessageList);
 		Mockito.when(pro.getTotalElements()).thenReturn(2L);
 		Mockito.when(pro.getTotalPages()).thenReturn(1);
 
-		when(socialMessageService.findAll(anyInt(),anyInt(),any())).thenReturn(pro);
+		when(socialMessageService.findAll(anyInt(), anyInt(), any())).thenReturn(pro);
 
 		mockMvc.perform(get("/tweets"))
 			.andExpect(status().isOk())
@@ -84,13 +84,13 @@ class SocialMessageControllerTest {
 
 		socialMessageList.add(socialMessage2);
 
-		Page<SocialMessage> pro= Mockito.mock(Page.class);
+		Page<SocialMessage> pro = Mockito.mock(Page.class);
 
 		Mockito.when(pro.getContent()).thenReturn(socialMessageList);
 		Mockito.when(pro.getTotalElements()).thenReturn(1L);
 		Mockito.when(pro.getTotalPages()).thenReturn(1);
 
-		when(socialMessageService.findAll(anyInt(),anyInt(),any())).thenReturn(pro);
+		when(socialMessageService.findAll(anyInt(), anyInt(), any())).thenReturn(pro);
 
 		mockMvc.perform(post("/tweetDelete").flashAttr("tweetDel", socialMessage1)).andExpect(status().isOk());
 	}

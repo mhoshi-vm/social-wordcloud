@@ -55,7 +55,7 @@ class SocialMessageServiceTest {
 
 		socialMessageRepository.save(socialMessage3);
 
-		Page<SocialMessage> socialMessages = socialMessageService.findAll(0,100,"createDateTime");
+		Page<SocialMessage> socialMessages = socialMessageService.findAll(0, 100, "createDateTime");
 		assertEquals("2222", socialMessages.getContent().get(0).getMessageId());
 		assertEquals("1100", socialMessages.getContent().get(1).getMessageId());
 		assertEquals("1111", socialMessages.getContent().get(2).getMessageId());

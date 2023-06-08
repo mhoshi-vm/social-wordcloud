@@ -86,7 +86,8 @@ public class WfServiceSpans {
 						span.tag("_outboundExternalService", tablesNamesFinder.getTableList(statement).get(0));
 						if (dbInstance.equals("Greenplum DB")) {
 							span.tag("_externalApplication", dbInstance);
-						}else {
+						}
+						else {
 							span.tag("_externalApplication", appName);
 						}
 						span.tag("_externalComponent", dbType);

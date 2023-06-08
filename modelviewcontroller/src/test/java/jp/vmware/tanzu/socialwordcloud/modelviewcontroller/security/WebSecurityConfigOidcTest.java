@@ -47,13 +47,13 @@ class WebSecurityConfigOidcTest {
 		this.mockMvc.perform(get("/login").with(oidcLogin())).andExpect(status().isOk());
 		this.mockMvc.perform(get("/api/tweetcount").with(oidcLogin())).andExpect(status().isOk());
 
-		Page<SocialMessage> pro= Mockito.mock(Page.class);
+		Page<SocialMessage> pro = Mockito.mock(Page.class);
 
 		Mockito.when(pro.getContent()).thenReturn(null);
 		Mockito.when(pro.getTotalElements()).thenReturn(0L);
 		Mockito.when(pro.getTotalPages()).thenReturn(0);
 
-		when(socialMessageService.findAll(anyInt(),anyInt(),any())).thenReturn(pro);
+		when(socialMessageService.findAll(anyInt(), anyInt(), any())).thenReturn(pro);
 		this.mockMvc.perform(get("/tweets").with(oidcLogin())).andExpect(status().isOk());
 	}
 
