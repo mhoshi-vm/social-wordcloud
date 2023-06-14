@@ -9,3 +9,7 @@ AS '
   sid = SentimentIntensityAnalyzer();
   return sid.polarity_scores(tweet)["neg"]
 ';
+
+
+CREATE EXTENSION postgis ;
+

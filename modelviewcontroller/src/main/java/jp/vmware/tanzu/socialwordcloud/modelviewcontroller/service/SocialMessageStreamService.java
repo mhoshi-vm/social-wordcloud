@@ -152,6 +152,9 @@ public class SocialMessageStreamService {
 			socialMessage.setMessageId(jsonDataNode.get("id").asText());
 			socialMessage.setContext(jsonDataNode.get("text").asText());
 			socialMessage.setLang(jsonDataNode.get("lang").asText());
+			if (jsonDataNode.get("coordinates") !=null) {
+				socialMessage.setLoc(jsonDataNode.get("coordinates").asText());
+			}
 		}
 
 		if (jsonExpansionNode != null) {

@@ -49,6 +49,7 @@
                 <option value="text">Text</option>
                 <option value="username">Username</option>
                 <option value="negativeSentiment">Sentiment</option>
+                <option value="loc">Location</option>
             </select>
             </form>
         </div>
@@ -66,6 +67,7 @@
             <th class="left">Username</th>
             <th class="left">Created</th>
             <th class="left">Sentiment</th>
+            <th class="left">Location</th>
             <th class="left">Delete</th>
         </tr>
         </thead>
@@ -77,6 +79,7 @@
             <td class="left" th:text="${tweet.username}"></td>
             <td class="left" th:text="${tweet.createDateTime}"></td>
             <td class="left" th:text="${tweet.negativeSentiment}"></td>
+            <td class="left" th:text="${tweet.loc}"></td>
             <td>
                 <form method="post" th:action="@{/tweetDelete}" th:object="${tweetDel}">
                     <input name="messageId" th:value="${tweet.messageId}" type="hidden">

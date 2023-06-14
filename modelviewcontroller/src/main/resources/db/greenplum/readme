@@ -1,3 +1,5 @@
+
+```
 createdb wordcloud
 createlang plpythonu -d wordcloud
 # The following is only for demo purpose
@@ -6,3 +8,9 @@ psql -d wordcloud -c "GRANT ALL PRIVILEGES ON DATABASE wordcloud TO wcadmin"
 psql -d wordcloud -c "CREATE SEQUENCE social_message_text_seq START WITH 1 INCREMENT BY 50;"
 echo 'host  wordcloud  wcadmin  0.0.0.0/0  password' >> /gpdata/master/gpseg-1/pg_hba.conf
 gpstop -u
+```
+
+For coordinates test, follow the bottom and run data_movement.sql
+
+https://github.com/greenplum-db/gp-magic-query/blob/main/geo/twitter.md
+

@@ -17,19 +17,27 @@ public class SocialMessageData {
 
 	public String lang;
 
+	public String coordinates;
+
 	public List<String> names;
 
-	private SocialMessageData(String origin, String id, String text, String lang, List<String> names) {
+	private SocialMessageData(String origin, String id, String text, String lang, List<String> names, String coordinates) {
 		this.origin = origin;
 		this.id = id;
 		this.text = text;
 		this.lang = lang;
 		this.names = names;
+		this.coordinates = coordinates;
 	}
 
 	public static SocialMessageData createSocialMessageData(String origin, String id, String text, String lang,
 			List<String> names) {
-		return new SocialMessageData(origin, id, text, lang, names);
+		return new SocialMessageData(origin, id, text, lang, names, "");
+	}
+
+	public static SocialMessageData createSocialMessageData(String origin, String id, String text, String lang,
+															List<String> names, String coordinates) {
+		return new SocialMessageData(origin, id, text, lang, names, coordinates);
 	}
 
 	public String createJson() throws JsonProcessingException {
@@ -47,6 +55,7 @@ public class SocialMessageData {
 		dataNode.put("id", id);
 		dataNode.put("text", text);
 		dataNode.put("lang", lang);
+		dataNode.put("coordinates", coordinates);
 
 		ObjectNode userNode = mapper.createObjectNode();
 

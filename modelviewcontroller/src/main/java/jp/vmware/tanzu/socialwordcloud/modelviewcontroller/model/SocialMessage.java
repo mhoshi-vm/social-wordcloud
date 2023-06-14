@@ -22,6 +22,8 @@ public class SocialMessage {
 
 	public String lang;
 
+	public String loc;
+
 	public Float negativeSentiment;
 
 	@CreationTimestamp
@@ -57,6 +59,10 @@ public class SocialMessage {
 
 	public void setLang(String lang) {
 		this.lang = lang;
+	}
+
+	public void setLoc(String loc) {
+		this.loc = loc;
 	}
 
 }

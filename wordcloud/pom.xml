@@ -30,7 +30,7 @@
                 </dependency>
                 <dependency>
                     <groupId>jp.vmware.tanzu.socialwordcloud</groupId>
-                    <artifactId>mastodonapiclient</artifactId>
+                    <artifactId>twitterapiclient</artifactId>
                     <version>${project.parent.version}</version>
                 </dependency>
             </dependencies>

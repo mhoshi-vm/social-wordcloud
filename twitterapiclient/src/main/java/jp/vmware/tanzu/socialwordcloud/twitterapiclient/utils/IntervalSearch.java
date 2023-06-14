@@ -100,6 +100,11 @@ public class IntervalSearch implements TweetSearch {
 			dataNode.put("id", tweet.getId());
 			dataNode.put("text", tweet.getText());
 			dataNode.put("lang", tweet.getLang());
+			logger.debug("Checking Geo Data" + tweet.getGeo());
+			if (tweet.getGeo() != null && tweet.getGeo().getCoordinates() != null) {
+				logger.debug("Found Geo Data" + tweet.getGeo().toJson());
+				dataNode.put("coordinates", tweet.getGeo().getCoordinates().toJson());
+			}
 		}
 		if (expansions != null && expansions.getUsers() != null) {
 			ObjectNode userNode = mapper.createObjectNode();
