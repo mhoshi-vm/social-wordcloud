@@ -1,202 +1,66 @@
-# Social Wordcloud generator in Spring Boot
+# Using Tanzu Application Platform
+[Tanzu Application Platform](https://tanzu.vmware.com/application-platform) can ease the configuration by using service bindings.
 
-Generate a wordcloud using Social API's such as Mastodon API / Twitter v2 API. Purposed for learning spring boot, and cloud native development technologies from [VMware Tanzu](https://tanzu.vmware.com/tanzu).
-
-![](img/pic5.png)
-
-Supports 2 modes
-- Standalone mode
-- Microservices mode
-
-The following technologies are used.
-
-- Spring Boot
-- [Spring Cloud Bindings](https://github.com/spring-cloud/spring-cloud-bindings)
-- [Kuromoji](https://github.com/atilika/kuromoji)
-- [D3 Cloud](https://github.com/jasondavies/d3-cloud)
-- [Clarity UI](https://clarity.design/)
-- [React-toastify](https://fkhadra.github.io/react-toastify/introduction)
-- [Raw Mastodon API via WebSocket](https://docs.joinmastodon.org/methods/streaming/#websocket)
-
-In addition, the following technologies are used for microservices mode
-- [Spring Security OAuth2.0](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-- [Spring Cloud Sleuth](https://spring.io/projects/spring-cloud-sleuth)
-- [RabbitMQ](https://www.rabbitmq.com/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [Redis](https://redis.io/)
-- [Wavefront](https://tanzu.vmware.com/observability)
-
-The following is used but deprecated
-- [Twitter API Client Library for Java](https://github.com/twitterdev/twitter-api-java-sdk)
-
-# --- WIP ----
-
-## Standalone mode
-
-Standalone mode, supports running this application anywhere with only JVM installed.
-
-### Architecture
-
-![](img/pic6.png)
-
-Standalone mode runs in the following technologies
-
-- Collect tweets based on configured search hashtags, and interval
-- Store tweets on local database
-- Creates a view application based on data queried from the database
-- Provides one time access password to log into "Tweets" page
-
-> :warning: Standalone mode does not support scaling out the application
-### Prerequisite
-
-- Java 11 (or above)
-- Create account in Mastodon 
-- Register an app (url is `https://<mstdn sever>/settings/applications`) with `read:statuses` and `read:notifications`
-- Get access token of the app
-
-> :warning: Currently only tested against https://mstdn.social/
-
-### How to run
+With services toolkit create the following class
 
 ```
-export MASTODON_TOKEN="..."
-export MASTODON_HASHTAGS="#HASTHAG_TO_SEARCH"
-git clone https://github.com/mhoshi-vm/social-wordcloud
-cd social-wordcloud
-./mvnw install && ./mvnw spring-boot:run -pl wordcloud
+% tanzu service class list
+  NAME      DESCRIPTION
+  appsso    It's a SSO service!
+  postgres  It's a Postgres cluster!
+  rabbitmq  It's a RabbitMQ cluster!
+  secrets   It's a set of Secrets!
 ```
 
-### Caution
-
-Running in several instances (aka scale out) in standalone will lead to the following.
-
-- Multiple instances querying Twitter API may breach the [API limitation](https://developer.twitter.com/ja/docs/twitter-api/rate-limits)。
-- No guarantee of all instances having the same data in database
-- User login will not be consistent due to not having an external user database
-
-## Microservices mode
-
-![](img/pic7.png)
-
-In microservice mode we decouple the function in the following way
-
-- TwitterAPIClient
-  - To limit the amount of API calls against twitter, this is designed to only run in a single instance
-  - Stores the tweet not in a database but instead to a RabbitMQ Queue
-- ModelViewController(MVC)
-  - Supports scaling out
-  - Consumes queue generated from the TwitterAPI client
-  - Updates/Reads from a single external Postgres database
-  - User login performed by external OIDC identity provider
-  - Store session cache on external Redis cache store
-
-### Prerequisite
-
-Additionally, to standalone mode prepare the following.
-
-- RabbitMQ Cluster
-- PostgreSQL Server
-- Redis Cluster
-- OAuth2.0 Endpoint
-
-For observability also prepare the following
-- Wavefront API token
-
-### How to run
-
-Prepare `application-twitterapiclient.properties` file.
+Perform the claim.  `--resource-name`,`--resource-kind`,`--resource-api-version`,`--resource-namespace` will be different on all env。
 
 ```
-## Mandatory
-twitter.bearer.token=TWITTER_BEARER_TOKEN
-twitter.hash.tags="#HASTHAG_TO_SEARCH"
-spring.rabbitmq.host=RABBITMQ_HOST
-spring.rabbitmq.password=RABBITMQ_PASSWORD
-spring.rabbitmq.port=RABBITMQ_PORT
-spring.rabbitmq.username=RABBITMQ_USERNAME
-
-## Optional
-management.metrics.export.wavefront.api-token=WAVEFRONT_TOKEN
-management.metrics.export.wavefront.uri=WAVEFRONT_URI
-management.metrics.export.wavefront.enabled=true
-wavefront.tracing.enabled=true
-wavefront.freemium-account=false
+tanzu services claim create rmq-claim --resource-name rabbitmq --resource-kind RabbitmqCluster --resource-api-version rabbitmq.com/v1beta1 
+tanzu services claim create twitter-claim --resource-name production-twitter --resource-kind Secret --resource-api-version v1 
+tanzu services claim create wavefront-claim --resource-name production-wavefront --resource-kind Secret --resource-api-version v1 
+tanzu services claim create postgres-claim --resource-name postgres-11 --resource-kind Postgres --resource-api-version sql.tanzu.vmware.com/v1
+tanzu services claim create gemfire-claim --resource-name gemfire-redis --resource-kind Secret --resource-api-version v1 
+tanzu services claim create sso-claim --resource-name basic-client-registration --resource-kind ClientRegistration --resource-api-version sso.apps.tanzu.vmware.com/v1alpha1 --resource-namespace service-instances
 ```
 
-Run the twitter-api client
+Run the mvc-app in the following way.
 
 ```
-./mvnw install && ./mvnw spring-boot:run -pl wordcloud -P twitterapiclient
+RESOURCE_CLAIM="services.apps.tanzu.vmware.com/v1alpha1:ResourceClaim"
+tanzu apps workload apply wordcloud \
+    --type web \
+    --label app.kubernetes.io/part-of=wordcloud \
+    --label apis.apps.tanzu.vmware.com/register-api=true \
+    --param-yaml api_descriptor='{"description":"Twitter Wordcloud","location":{"path":"/v3/api-docs"},"owner":"demo","system":"dev","type":"openapi"}' \
+    --service-ref "sso=${RESOURCE_CLAIM}:sso-claim" \
+    --service-ref "postgres=${RESOURCE_CLAIM}:postgres-claim" \
+    --service-ref "rabbitmq=${RESOURCE_CLAIM}:rmq-claim" \
+    --service-ref "redis=${RESOURCE_CLAIM}:gemfire-claim" \
+    --build-env "BP_JVM_VERSION=17" \
+    --build-env "BP_MAVEN_BUILT_MODULE=wordcloud" \
+    --build-env BP_MAVEN_BUILD_ARGUMENTS="-pl wordcloud -am -P modelviewcontroller package" \
+    --env "SERVICE_NAME=mvc" \
+    --env "JAVA_TOOL_OPTIONS=-Dmanagement.health.probes.enabled='false'" \
+    --annotation autoscaling.knative.dev/minScale=1 \
+    --param-yaml buildServiceBindings='[{"name": "bucketrepo-settings-xml", "kind": "Secret"}]' \
+    --git-repo https://github.com/mhoshi-vm/twitter-wordcloud \
+    --git-branch staging
 ```
 
-Prepare `application-modelviecontroller.properties` 
+Run the twitter api client app in the following way.
 
 ```
-## Mandatory
-spring.rabbitmq.host=RABBITMQ_HOST
-spring.rabbitmq.password=RABBITMQ_PASSWORD
-spring.rabbitmq.port=RABBITMQ_PORT
-spring.rabbitmq.username=RABBITMQ_USERNAME
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.datasource.password=POSTGRES_PASSWORD
-spring.datasource.url=POSTGRES_URL
-spring.datasource.username=POSTGRES_USERNAME
-spring.r2dbc.url=POSTGRES_URI
-spring.r2dbc.password=POSTGRES_PASSWORD
-spring.r2dbc.username=POSTGRES_USERNAME
-spring.security.oauth2.client.registration.{name}.client-id=client-id
-spring.security.oauth2.client.registration.{name}.client-secret	=client-secret
-spring.security.oauth2.client.registration.{name}.provider=provider
-spring.security.oauth2.client.registration.{name}.client-name=client-name
-spring.security.oauth2.client.registration.{name}.client-authentication-method=client-authmode
-spring.security.oauth2.client.registration.{name}.authorization-grant-type=grant-type
-spring.security.oauth2.client.registration.{name}.redirect-uri=redirect-uri
-spring.security.oauth2.client.registration.{name}.scope=scope
-spring.security.oauth2.client.provider.{provider}.issuer-uri=issuer-uri
-spring.security.oauth2.client.provider.{provider}.authorization-uri=autorization-uri
-spring.security.oauth2.client.provider.{provider}.token-uri=token-uri
-spring.security.oauth2.client.provider.{provider}.user-info-uri=user-info-uri
-spring.security.oauth2.client.provider.{provider}.user-info-authentication-method=user-info-authentication-method
-spring.security.oauth2.client.provider.{provider}.jwk-set-uri=jwk-set-uri
-spring.security.oauth2.client.provider.{provider}.user-name-attribute=user-name-attribute
-spring.redis.client-name={client-name}
-spring.redis.cluster.max-redirects={cluster.max-redirects}
-spring.redis.cluster.nodes={cluster.nodes}
-spring.redis.database={database}
-spring.redis.host={host}
-spring.redis.password={password}
-spring.redis.port={port}
-spring.redis.sentinel.master={sentinel.master}
-spring.redis.sentinel.nodes={sentinel.nodes}
-spring.redis.ssl={ssl}
-spring.redis.url={url}
-
-
-## Optional
-management.metrics.export.wavefront.api-token=WAVEFRONT_TOKEN
-management.metrics.export.wavefront.uri=WAVEFRONT_URI
-management.metrics.export.wavefront.enabled=true
-wavefront.tracing.enabled=true
-wavefront.freemium-account=false
-```
-
-Run the modelviewcontroller app.
-
-```
-./mvnw install && ./mvnw spring-boot:run -pl wordcloud -P modelviewcontroller
-```
-
-### Yikes! this is difficult ...
-
-Don't worry. We have an easier way, the [TAP way](TAP.md)
-
-# Experimental
-
-Both standalone/microservices support [Twitter API v2 streaming](https://developer.twitter.com/en/docs/tutorials/stream-tweets-in-real-time) for more realtime handling of tweets.
-Currently, a known issue (closed but) [unresolved](https://github.com/twitterdev/twitter-api-java-sdk/issues/43)
-
-To run streaming add the following parameter
-
-```
-twitter.search.mode=stream
+RESOURCE_CLAIM="services.apps.tanzu.vmware.com/v1alpha1:ResourceClaim"
+tanzu apps workload apply twitter-api-client \
+    --type server \
+    --label app.kubernetes.io/part-of=wordcloud \
+    --service-ref "rabbitmq=${RESOURCE_CLAIM}:rmq-claim" \
+    --service-ref "twitter=${RESOURCE_CLAIM}:twitter-claim" \
+    --build-env "BP_MAVEN_BUILT_MODULE=wordcloud" \
+    --build-env "BP_JVM_VERSION=17" \
+    --build-env BP_MAVEN_BUILD_ARGUMENTS="-pl wordcloud -am -P twitterapiclient package" \
+    --env "SERVICE_NAME=twitterclient" \
+    --env "JAVA_TOOL_OPTIONS=-Dmanagement.health.probes.enabled='false'" \
+    --git-repo https://github.com/mhoshi-vm/twitter-wordcloud \
+    --git-branch staging
 ```
