@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jp.vmware.tanzu.socialwordcloud.library.model.SocialMessageData;
 import jp.vmware.tanzu.socialwordcloud.library.utils.SocialMessageHandler;
 import jp.vmware.tanzu.socialwordcloud.mastodonapiclient.client.MastodonClient;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -20,10 +21,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 @Component
 @ConditionalOnProperty(name = "mastodon.search.mode", havingValue = "interval")
@@ -44,7 +45,7 @@ public class MastodonPollingTootHandler {
 	}
 
 	@InboundChannelAdapter(value = "handlerChannel", poller = @Poller(fixedDelay = "15000"))
-	public List<SocialMessageData> mastodonPolling() throws JsonProcessingException {
+	public List<SocialMessageData> mastodonPolling() {
 
 		RestTemplate restTemplate = mastodonClient.getRestTemplate();
 
@@ -92,6 +93,33 @@ public class MastodonPollingTootHandler {
 					statusNames.add(status.get("account").get("display_name").asText());
 				}
 
+				List<String> statusImages = new ArrayList<>();
+
+				if (status.get("media_attachments") != null && status.get("media_attachments").isArray()) {
+					for (JsonNode attachment : status.get("media_attachments")) {
+						if (attachment.get("type") != null && Objects.equals(attachment.get("type").asText(), "image")
+								&& attachment.get("preview_url") != null) {
+							InputStream inputStream = null;
+							try {
+								inputStream = openUrl(attachment.get("preview_url").asText());
+							}
+							catch (IOException e) {
+								logger.debug("Failed to open image url");
+							}
+							byte[] bytes = new byte[0];
+							try {
+								if (inputStream != null) {
+									bytes = org.apache.commons.io.IOUtils.toByteArray(inputStream);
+								}
+							}
+							catch (IOException e) {
+								logger.debug("Failed to converto image to byteArray");
+							}
+							statusImages.add(Base64.encodeBase64String(bytes));
+						}
+					}
+				}
+
 				if (this.sinceId.equals("0")) {
 					logger.debug("Update since id :" + sinceId);
 					this.sinceId = statusId;
@@ -103,8 +131,13 @@ public class MastodonPollingTootHandler {
 				}
 
 				SocialMessageData socialMessageData = SocialMessageData.createSocialMessageData("mastodon", statusId,
-						statusContent, statusLanguage, statusNames);
-				logger.debug("adding social data :" + socialMessageData.createJson());
+						statusContent, statusLanguage, statusNames, statusImages);
+				try {
+					logger.debug("adding social data :" + socialMessageData.createJson());
+				}
+				catch (JsonProcessingException e) {
+					throw new RuntimeException(e);
+				}
 				socialMessageDataList.add(socialMessageData);
 			}
 		}
@@ -134,6 +167,10 @@ public class MastodonPollingTootHandler {
 		catch (IOException | InterruptedException e) {
 			logger.warn("Failed to send data : " + e);
 		}
+	}
+
+	public InputStream openUrl(String url) throws IOException {
+		return new URL(url).openStream();
 	}
 
 }

@@ -1,4 +1,5 @@
 CREATE SEQUENCE social_message_text_seq START WITH 1 INCREMENT BY 50;
+CREATE SEQUENCE social_message_image_seq START WITH 1 INCREMENT BY 50;
 
 CREATE TABLE social_message (
     message_id VARCHAR(255) NOT NULL,
@@ -15,5 +16,12 @@ CREATE TABLE social_message_text (
     message_id VARCHAR(255),
     text VARCHAR(255),
     PRIMARY KEY (id)
+);
+
+CREATE TABLE social_message_image (
+                                     id INTEGER NOT NULL,
+                                     message_id VARCHAR(255),
+                                     image BYTEA,
+                                     PRIMARY KEY (id)
 );
 

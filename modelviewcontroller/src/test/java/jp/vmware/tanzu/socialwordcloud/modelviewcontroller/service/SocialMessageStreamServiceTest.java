@@ -1,9 +1,12 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service;
 
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessageImage;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageImageReposity;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageRepository;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageTextRepository;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.utils.MorphologicalAnalysis;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,11 +15,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.ResourceUtils;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
@@ -34,10 +42,13 @@ class SocialMessageStreamServiceTest {
 	@Autowired
 	private SocialMessageTextRepository socialMessageTextRepository;
 
+	@Autowired
+	private SocialMessageImageReposity socialMessageImageReposity;
+
 	@BeforeEach
 	void setup() {
 		this.socialMessageStreamService = new SocialMessageStreamService(socialMessageRepository,
-				socialMessageTextRepository, morphologicalAnalysis, "ja", "postgres");
+				socialMessageTextRepository, socialMessageImageReposity, morphologicalAnalysis, "ja", "postgres");
 
 		this.spySocialMessageStreamService = Mockito.spy(socialMessageStreamService);
 
@@ -121,6 +132,34 @@ class SocialMessageStreamServiceTest {
 		assertEquals(1, textCounts.get(2).getSize());
 		assertEquals("tweet", textCounts.get(3).getText());
 		assertEquals(1, textCounts.get(3).getSize());
+	}
+
+	@Test
+	void testImage() throws IOException, InterruptedException {
+		SocialMessage socialMessage = new SocialMessage();
+		socialMessage.setMessageId("111");
+		socialMessage.setContext("#hoge_foo #foo_bar This is !$ test tweet");
+		socialMessage.setLang("ja");
+		socialMessage.setUsername("Jannie");
+
+		List<SocialMessageImage> socialMessageImages = new ArrayList<>();
+		SocialMessageImage socialMessageImage = new SocialMessageImage();
+		File initialFile = ResourceUtils.getFile("classpath:test.png");
+		InputStream targetStream = new DataInputStream(new FileInputStream(initialFile));
+		byte[] orginalImg = Files.readAllBytes(initialFile.toPath());
+		socialMessageImage.setMessageId("111");
+		socialMessageImage.setImage(orginalImg);
+		socialMessageImages.add(socialMessageImage);
+
+		Mockito.doReturn(socialMessage).when(spySocialMessageStreamService).setSocialMessage(Mockito.any());
+		Mockito.doReturn(socialMessageImages).when(spySocialMessageStreamService).setImage(Mockito.any());
+
+		spySocialMessageStreamService.handler("this is test");
+
+		List<SocialMessageImage> socialMessageImageReposityAll = socialMessageImageReposity.findAll();
+		assertEquals(socialMessageImageReposityAll.size(), 1);
+		assertTrue(Arrays.equals(orginalImg, socialMessageImageReposityAll.get(0).getImage()));
+
 	}
 
 	/*

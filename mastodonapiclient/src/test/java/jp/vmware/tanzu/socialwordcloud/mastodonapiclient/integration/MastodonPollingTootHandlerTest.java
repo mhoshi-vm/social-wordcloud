@@ -1,6 +1,5 @@
 package jp.vmware.tanzu.socialwordcloud.mastodonapiclient.integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,14 +16,19 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.*;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MastodonPollingTootHandlerTest {
@@ -49,12 +53,12 @@ class MastodonPollingTootHandlerTest {
 		Mockito.doReturn("aaa").when(mastodonClient).getMastodonHashTag();
 		Mockito.doReturn(restTemplate).when(mastodonClient).getRestTemplate();
 
-		mastodonPollingTootHandler = new MastodonPollingTootHandler(mastodonClient, socialMessageHandler);
+		mastodonPollingTootHandler = spy(new MastodonPollingTootHandler(mastodonClient, socialMessageHandler));
 
 	}
 
 	@Test
-	void checkSingleResponsePolling() throws JsonProcessingException {
+	void checkSingleResponsePolling() {
 
 		ObjectMapper mapper = new ObjectMapper();
 		ArrayNode statuses = mapper.createArrayNode();
@@ -87,7 +91,7 @@ class MastodonPollingTootHandlerTest {
 	}
 
 	@Test
-	void check40InitResponse() throws JsonProcessingException {
+	void check40InitResponse() {
 
 		ObjectMapper mapper = new ObjectMapper();
 		ArrayNode statuses = mapper.createArrayNode();
@@ -121,7 +125,7 @@ class MastodonPollingTootHandlerTest {
 	}
 
 	@Test
-	void check40Polling() throws JsonProcessingException {
+	void check40Polling() {
 
 		ObjectMapper mapper = new ObjectMapper();
 		ArrayNode statuses = mapper.createArrayNode();
@@ -173,6 +177,60 @@ class MastodonPollingTootHandlerTest {
 
 		Assertions.assertEquals(socialMessageDataList.size(), 40);
 
+	}
+
+	@Test
+	void checkImage() throws IOException {
+
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode statuses = mapper.createArrayNode();
+
+		ObjectNode status = mapper.createObjectNode();
+		status.put("id", "aaaa");
+		status.put("content", "bbbb");
+		status.put("language", "en");
+
+		ObjectNode name = mapper.createObjectNode();
+		name.put("display_name", "ccc");
+		status.set("account", name);
+
+		ArrayNode mediaAttachments = mapper.createArrayNode();
+		ObjectNode images = mapper.createObjectNode();
+		images.put("type", "image");
+		images.put("preview_url", "http://aaaa");
+		mediaAttachments.add(images);
+		status.set("media_attachments", mediaAttachments);
+
+		statuses.add(status);
+
+		ResponseEntity<JsonNode> response = new ResponseEntity<>(statuses, HttpStatus.OK);
+
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+		File initialFile = ResourceUtils.getFile("classpath:test.png");
+		InputStream targetStream = new DataInputStream(new FileInputStream(initialFile));
+
+		when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), eq(entity), eq(JsonNode.class)))
+			.thenReturn(response);
+
+		doReturn(targetStream).when(mastodonPollingTootHandler).openUrl(anyString());
+
+		// Initital Run
+		List<SocialMessageData> socialMessageDataList = mastodonPollingTootHandler.mastodonPolling();
+
+		targetStream = new DataInputStream(new FileInputStream(initialFile));
+		doReturn(targetStream).when(mastodonPollingTootHandler).openUrl(anyString());
+		socialMessageDataList = mastodonPollingTootHandler.mastodonPolling();
+
+		Assertions.assertEquals(socialMessageDataList.size(), 1);
+		Assertions.assertEquals(socialMessageDataList.get(0).getImages().size(), 1);
+
+		byte[] orginalImg = Files.readAllBytes(initialFile.toPath());
+
+		byte[] decodedImg = Base64.getDecoder().decode(socialMessageDataList.get(0).getImages().get(0).toString());
+
+		Assertions.assertTrue(Arrays.equals(orginalImg, decodedImg));
 	}
 
 }

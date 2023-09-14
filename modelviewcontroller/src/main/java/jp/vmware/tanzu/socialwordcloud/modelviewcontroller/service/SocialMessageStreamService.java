@@ -3,7 +3,9 @@ package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessageImage;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessageText;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageImageReposity;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageRepository;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageTextRepository;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.utils.MorphologicalAnalysis;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
@@ -31,6 +35,8 @@ public class SocialMessageStreamService {
 
 	public SocialMessageTextRepository socialMessageTextRepository;
 
+	public SocialMessageImageReposity socialMessageImageReposity;
+
 	public MorphologicalAnalysis morphologicalAnalysis;
 
 	public String lang;
@@ -40,10 +46,12 @@ public class SocialMessageStreamService {
 	Pattern nonLetterPattern;
 
 	public SocialMessageStreamService(SocialMessageRepository socialMessageRepository,
-			SocialMessageTextRepository socialMessageTextRepository, MorphologicalAnalysis morphologicalAnalysis,
+			SocialMessageTextRepository socialMessageTextRepository,
+			SocialMessageImageReposity socialMessageImageReposity, MorphologicalAnalysis morphologicalAnalysis,
 			@Value("${twitter.search.lang}") String lang, @Value("${database}") String database) {
 		this.socialMessageRepository = socialMessageRepository;
 		this.socialMessageTextRepository = socialMessageTextRepository;
+		this.socialMessageImageReposity = socialMessageImageReposity;
 		this.lang = lang;
 		this.database = database;
 		this.morphologicalAnalysis = morphologicalAnalysis;
@@ -59,6 +67,7 @@ public class SocialMessageStreamService {
 	public void handler(String line) throws InterruptedException {
 
 		SocialMessage socialMessage = setSocialMessage(line);
+		List<SocialMessageImage> socialMessageImages = setImage(line);
 
 		if (socialMessage == null) {
 			Thread.sleep(100);
@@ -71,6 +80,8 @@ public class SocialMessageStreamService {
 		if (database.equals("greenplum")) {
 			socialMessageRepository.updateNegativeSentiment(socialMessage.getMessageId());
 		}
+		socialMessageImageReposity.saveAll(socialMessageImages);
+
 		boolean nextSkip = false;
 
 		for (String text : morphologicalAnalysis.getToken(socialMessage.getContext())) {
@@ -124,13 +135,69 @@ public class SocialMessageStreamService {
 
 	public SocialMessage setSocialMessage(String line) {
 
+		JsonNode jsonFullNode = decodeJson(line);
+
+		SocialMessage socialMessage = new SocialMessage();
+
+		if (jsonFullNode != null) {
+			if (jsonFullNode.get("origin") != null) {
+				socialMessage.setOrigin(jsonFullNode.get("origin").asText());
+			}
+
+			JsonNode jsonDataNode = jsonFullNode.get("data");
+			JsonNode jsonExpansionNode = jsonFullNode.get("includes");
+
+			if (jsonDataNode != null) {
+				socialMessage.setMessageId(jsonDataNode.get("id").asText());
+				socialMessage.setContext(jsonDataNode.get("text").asText());
+				socialMessage.setLang(jsonDataNode.get("lang").asText());
+			}
+
+			if (jsonExpansionNode != null) {
+				JsonNode jsonUserNode = jsonExpansionNode.get("users");
+				socialMessage.setUsername(jsonUserNode.get(0).get("name").asText());
+			}
+
+		}
+		return socialMessage;
+	}
+
+	public List<SocialMessageImage> setImage(String line) {
+
+		JsonNode jsonFullNode = decodeJson(line);
+
+		List<SocialMessageImage> socialMessageImages = new ArrayList<>();
+
+		if (jsonFullNode != null) {
+			JsonNode jsonDataNode = jsonFullNode.get("data");
+			JsonNode jsonExpansionNode = jsonFullNode.get("includes");
+
+			if (jsonDataNode != null && jsonExpansionNode != null) {
+				JsonNode jsonImageNode = jsonExpansionNode.get("images");
+				if (jsonImageNode.isArray() && !jsonImageNode.isEmpty()) {
+					for (JsonNode image : jsonImageNode) {
+						SocialMessageImage socialMessageImage = new SocialMessageImage();
+						byte[] decodedImg = Base64.getDecoder().decode(image.asText());
+						socialMessageImage.setMessageId(jsonDataNode.get("id").asText());
+						socialMessageImage.setImage(decodedImg);
+						socialMessageImages.add(socialMessageImage);
+					}
+				}
+			}
+		}
+
+		return socialMessageImages;
+	}
+
+	private JsonNode decodeJson(String line) {
+
 		if (line.isEmpty()) {
 			return null;
 		}
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		JsonNode jsonFullNode = null;
+		JsonNode jsonFullNode;
 		try {
 			jsonFullNode = objectMapper.readTree(line);
 		}
@@ -138,28 +205,7 @@ public class SocialMessageStreamService {
 			logger.warn("Received non Json string");
 			return null;
 		}
-
-		SocialMessage socialMessage = new SocialMessage();
-
-		if (jsonFullNode.get("origin") != null) {
-			socialMessage.setOrigin(jsonFullNode.get("origin").asText());
-		}
-
-		JsonNode jsonDataNode = jsonFullNode.get("data");
-		JsonNode jsonExpansionNode = jsonFullNode.get("includes");
-
-		if (jsonDataNode != null) {
-			socialMessage.setMessageId(jsonDataNode.get("id").asText());
-			socialMessage.setContext(jsonDataNode.get("text").asText());
-			socialMessage.setLang(jsonDataNode.get("lang").asText());
-		}
-
-		if (jsonExpansionNode != null) {
-			JsonNode jsonUserNode = jsonExpansionNode.get("users");
-			socialMessage.setUsername(jsonUserNode.get(0).get("name").asText());
-		}
-
-		return socialMessage;
+		return jsonFullNode;
 	}
 
 }

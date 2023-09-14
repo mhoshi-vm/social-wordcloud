@@ -19,17 +19,21 @@ public class SocialMessageData {
 
 	public List<String> names;
 
-	private SocialMessageData(String origin, String id, String text, String lang, List<String> names) {
+	public List<String> images;
+
+	private SocialMessageData(String origin, String id, String text, String lang, List<String> names,
+			List<String> images) {
 		this.origin = origin;
 		this.id = id;
 		this.text = text;
 		this.lang = lang;
 		this.names = names;
+		this.images = images;
 	}
 
 	public static SocialMessageData createSocialMessageData(String origin, String id, String text, String lang,
-			List<String> names) {
-		return new SocialMessageData(origin, id, text, lang, names);
+			List<String> names, List<String> images) {
+		return new SocialMessageData(origin, id, text, lang, names, images);
 	}
 
 	public String createJson() throws JsonProcessingException {
@@ -54,13 +58,24 @@ public class SocialMessageData {
 			userNode.put("name", name);
 		}
 
+		ArrayNode imagesNode = mapper.createArrayNode();
+
+		for (String image : images) {
+			imagesNode.add(image);
+		}
+
 		usersNode.add(userNode);
 		includesNode.set("users", usersNode);
+		includesNode.set("images", imagesNode);
 
 		jNode.set("data", dataNode);
 		jNode.set("includes", includesNode);
 
 		return jNode.toString();
+	}
+
+	public List<String> getImages() {
+		return images;
 	}
 
 }
