@@ -25,12 +25,9 @@ public class WfEnableOnlyViaBindings implements BindingsPropertiesProcessor {
 		}
 		else {
 			map.put("management.tracing.sampling.probability", "1.0");
+			map.put("management.wavefront.api-token", wfBindings.get(0).getSecret().get("api-token"));
+			map.put("management.wavefront.uri", wfBindings.get(0).getSecret().get("uri"));
 		}
-		bindings.filterBindings(TYPE).forEach(binding -> {
-			var mapper = new WfEnableOnlyViaBindings.BindingPropertiesMapper(binding.getSecret(), map);
-			mapper.map("api-token", "management.wavefront.api-token");
-			mapper.map("uri", "management.wavefront.uri");
-		});
 	}
 
 	static class BindingPropertiesMapper {

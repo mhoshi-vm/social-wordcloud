@@ -23,20 +23,6 @@ public class RedisEnabledViaBindings implements BindingsPropertiesProcessor {
 		map.put("spring.session.store-type", "redis");
 		map.put("management.health.redis.enabled", "true");
 
-		bindings.filterBindings(TYPE).forEach(binding -> {
-			var mapper = new BindingPropertiesMapper(binding.getSecret(), map);
-			mapper.map("client-name", "spring.data.redis.client-name");
-			mapper.map("cluster.max-redirects", "spring.data.redis.cluster.max-redirects");
-			mapper.map("cluster.nodes", "spring.data.redis.cluster.nodes");
-			mapper.map("database", "spring.data.redis.database");
-			mapper.map("host", "spring.data.redis.host");
-			mapper.map("password", "spring.data.redis.password");
-			mapper.map("port", "spring.data.redis.port");
-			mapper.map("sentinel.master", "spring.data.redis.sentinel.master");
-			mapper.map("sentinel.nodes", "spring.data.redis.sentinel.nodes");
-			mapper.map("ssl", "spring.data.redis.ssl");
-			mapper.map("url", "spring.data.redis.url");
-		});
 	}
 
 	static class BindingPropertiesMapper {
