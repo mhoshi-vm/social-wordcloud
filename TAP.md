@@ -110,7 +110,7 @@ EOF
 **From developer namespace (if required change via `kubectl config set-context --current --namespace=<developer_namespace>`)** perform the claim.  
 ```
 tanzu service class-claim create rmq-claim --class dynamic-rabbitmq
-anzu services claim create mastodon-claim --resource-name production-mastodon --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
+tanzu services claim create mastodon-claim --resource-name production-mastodon --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
 tanzu services claim create wavefront-claim --resource-name production-wavefront --resource-kind Secret --resource-api-version v1 --resource-namespace service-instances
 tanzu services claim create postgres-claim --resource-name postgres-11 --resource-kind Postgres --resource-api-version sql.tanzu.vmware.com/v1 --resource-namespace service-instances
 tanzu service class-claim create gemfire-claim --class dynamic-gemfire
