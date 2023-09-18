@@ -28,7 +28,7 @@
         <spring-javaformat-maven-plugin.version>0.0.39</spring-javaformat-maven-plugin.version>
 
         <!-- Web dependencies -->
-        <webjars-bootstrap.version>5.3.1</webjars-bootstrap.version>
+        <webjars-bootstrap.version>5.3.2</webjars-bootstrap.version>
         <webjars-jquery.version>3.7.1</webjars-jquery.version>
         <webjars-d3js.version>7.8.4</webjars-d3js.version>
         <webjars-d3cloud.version>1.2.5</webjars-d3cloud.version>
