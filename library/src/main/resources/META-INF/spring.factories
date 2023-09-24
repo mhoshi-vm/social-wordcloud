@@ -4,4 +4,5 @@ org.springframework.cloud.bindings.boot.BindingsPropertiesProcessor=jp.vmware.ta
   jp.vmware.tanzu.socialwordcloud.library.servicebindings.PostgresEnabledViaBindings, \
   jp.vmware.tanzu.socialwordcloud.library.servicebindings.OIDCEnabledViaBindings, \
   jp.vmware.tanzu.socialwordcloud.library.servicebindings.RedisEnabledViaBindings, \
-  jp.vmware.tanzu.socialwordcloud.library.servicebindings.MastodonBindingsPropertiesProcessor
+  jp.vmware.tanzu.socialwordcloud.library.servicebindings.MastodonBindingsPropertiesProcessor, \
+  jp.vmware.tanzu.socialwordcloud.library.servicebindings.OpenAIBindingsPropertiesProcessor

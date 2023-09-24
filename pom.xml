@@ -80,6 +80,7 @@
     </build>
 
     <modules>
+        <module>ai_rag</module>
         <module>library</module>
         <module>modelviewcontroller</module>
         <module>twitterapiclient</module>

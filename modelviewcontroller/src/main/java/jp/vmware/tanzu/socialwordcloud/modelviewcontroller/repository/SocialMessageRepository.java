@@ -7,9 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface SocialMessageRepository extends JpaRepository<SocialMessage, Integer> {
 
 	Page<SocialMessage> findAll(Pageable pageable);
+
+	List<SocialMessage> findSocialMessageByMessageIdIn(List<String> messageId);
 
 	long deleteByMessageId(String tweetId);
 

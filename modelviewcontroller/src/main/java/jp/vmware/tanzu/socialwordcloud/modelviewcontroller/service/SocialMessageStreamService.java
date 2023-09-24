@@ -2,6 +2,7 @@ package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jp.vmware.tanzu.socialwordcloud.ai_rag.rag.RetriveVectorTable;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessageImage;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessageText;
@@ -39,6 +40,8 @@ public class SocialMessageStreamService {
 
 	public MorphologicalAnalysis morphologicalAnalysis;
 
+	public RetriveVectorTable retriveVectorTable;
+
 	public String lang;
 
 	public String database;
@@ -48,13 +51,15 @@ public class SocialMessageStreamService {
 	public SocialMessageStreamService(SocialMessageRepository socialMessageRepository,
 			SocialMessageTextRepository socialMessageTextRepository,
 			SocialMessageImageReposity socialMessageImageReposity, MorphologicalAnalysis morphologicalAnalysis,
-			@Value("${twitter.search.lang}") String lang, @Value("${database}") String database) {
+			RetriveVectorTable retriveVectorTable, @Value("${twitter.search.lang}") String lang,
+			@Value("${database}") String database) {
 		this.socialMessageRepository = socialMessageRepository;
 		this.socialMessageTextRepository = socialMessageTextRepository;
 		this.socialMessageImageReposity = socialMessageImageReposity;
 		this.lang = lang;
 		this.database = database;
 		this.morphologicalAnalysis = morphologicalAnalysis;
+		this.retriveVectorTable = retriveVectorTable;
 		this.emitters = new CopyOnWriteArrayList<>();
 		this.nonLetterPattern = Pattern.compile("^\\W+$", Pattern.UNICODE_CHARACTER_CLASS);
 	}
@@ -79,6 +84,7 @@ public class SocialMessageStreamService {
 		socialMessageRepository.save(socialMessage);
 		if (database.equals("greenplum")) {
 			socialMessageRepository.updateNegativeSentiment(socialMessage.getMessageId());
+			retriveVectorTable.insertIntoDb(socialMessage.getMessageId(), socialMessage.getContext());
 		}
 		socialMessageImageReposity.saveAll(socialMessageImages);
 
