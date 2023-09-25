@@ -62,7 +62,7 @@ public class RetriveVectorTable {
 
 	public List<VectorRecord> semanticSearchListId(String prompt, Integer limit) {
 		VecordRecordMapper vecordRecordMapper = new VecordRecordMapper();
-		return this.jdbcTemplate.query("SELECT id, message_id, pgml.embed('" + this.embeddingModels + "', '" + prompt
+		return this.jdbcTemplate.query("SELECT DISTINCT ON (distance) id, message_id, pgml.embed('" + this.embeddingModels + "', '" + prompt
 				+ "')::vector " + PgDistanceType.EuclideanDistance.operator + " vector AS distance FROM "
 				+ this.vectorTable + " ORDER BY distance LIMIT " + limit, vecordRecordMapper);
 	}
