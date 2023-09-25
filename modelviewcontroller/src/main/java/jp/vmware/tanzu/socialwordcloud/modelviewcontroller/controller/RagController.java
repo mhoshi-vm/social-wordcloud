@@ -8,6 +8,7 @@ import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageRepository;
 import org.springframework.ai.client.Generation;
 import org.springframework.ai.prompt.messages.Message;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,6 +48,7 @@ public class RagController {
 	}
 
 	@GetMapping(value = "/aisearch", params = "action=retrieve")
+	@ConditionalOnProperty(value = "openai.vector.table")
 	public ModelAndView getRetrieve(@RequestParam(value = "message", defaultValue = "") String message,
 			@RequestParam(value = "limits", defaultValue = "10") Integer limits) {
 
@@ -62,6 +64,7 @@ public class RagController {
 	}
 
 	@GetMapping(value = "/aisearch", params = "action=augment")
+	@ConditionalOnProperty(value = "openai.vector.table")
 	public ModelAndView setAugment(@RequestParam(value = "message", defaultValue = "") String message,
 			@RequestParam(value = "limits", defaultValue = "10") Integer limits) {
 
@@ -78,6 +81,7 @@ public class RagController {
 	}
 
 	@GetMapping(value = "/aisearch", params = "action=generate")
+	@ConditionalOnProperty(value = "openai.vector.table")
 	public ModelAndView generate(@RequestParam(value = "message", defaultValue = "") String message,
 			@RequestParam(value = "limits", defaultValue = "10") Integer limits,
 			@RequestParam(value = "tokens", defaultValue = "3000") Integer maxTokens) {

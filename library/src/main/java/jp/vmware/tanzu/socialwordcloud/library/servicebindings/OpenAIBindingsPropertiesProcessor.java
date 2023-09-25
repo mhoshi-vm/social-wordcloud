@@ -18,7 +18,7 @@ public class OpenAIBindingsPropertiesProcessor implements BindingsPropertiesProc
 			return;
 		}
 		List<Binding> myBindings = bindings.filterBindings(TYPE);
-		if (myBindings.size() == 0) {
+		if (myBindings.isEmpty()) {
 			return;
 		}
 
@@ -26,6 +26,7 @@ public class OpenAIBindingsPropertiesProcessor implements BindingsPropertiesProc
 		properties.put("spring.ai.openai.model", myBindings.get(0).getSecret().get("model"));
 		properties.put("spring.ai.openai.base-url", myBindings.get(0).getSecret().get("url"));
 		properties.put("spring.ai.openai.embedding-model", myBindings.get(0).getSecret().get("embedding-models"));
+		properties.put("openai.vector.table", myBindings.get(0).getSecret().get("vector-table"));
 
 	}
 

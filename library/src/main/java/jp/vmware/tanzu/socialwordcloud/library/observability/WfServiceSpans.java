@@ -1,5 +1,6 @@
 package jp.vmware.tanzu.socialwordcloud.library.observability;
 
+import brave.Span;
 import brave.handler.MutableSpan;
 import brave.handler.SpanHandler;
 import brave.propagation.TraceContext;
@@ -10,7 +11,6 @@ import net.sf.jsqlparser.util.TablesNamesFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -114,7 +114,6 @@ public class WfServiceSpans {
 	}
 
 	@Bean
-	@ConditionalOnProperty(value = "service.name", havingValue = "mvc")
 	SpanHandler spanServletHandler() {
 		return new SpanHandler() {
 			@Override
@@ -135,14 +134,33 @@ public class WfServiceSpans {
 	}
 
 	@Bean
-	SpanHandler spanRabbitMQHandler() {
+	SpanHandler aiRagHandler() {
 		return new SpanHandler() {
 			@Override
 			public boolean end(TraceContext traceContext, MutableSpan span, Cause cause) {
-				if (span.name().endsWith("-rabbitmq")) {
-					span.tag("_outboundExternalService", "RabbitMQ");
+				if (span.name().equals("generate-summary#get-generation")) {
+					span.kind(Span.Kind.CLIENT);
+					span.remoteServiceName("LLM");
+					span.tag("_outboundExternalService", "LLM");
 					span.tag("_externalApplication", appName);
-					span.tag("_externalComponent", "RabbitMQ");
+					span.tag("_externalComponent", "LLM");
+				}
+				return true;
+			}
+		};
+	}
+
+	@Bean
+	SpanHandler socialMessageHandler() {
+		return new SpanHandler() {
+			@Override
+			public boolean end(TraceContext traceContext, MutableSpan span, Cause cause) {
+				if (span.name().startsWith("handle-social-message")) {
+					span.kind(Span.Kind.CLIENT);
+					span.remoteServiceName("LLM");
+					span.tag("_outboundExternalService", socialOrigin);
+					span.tag("_externalApplication", appName);
+					span.tag("_externalComponent", socialOrigin);
 				}
 				return true;
 			}

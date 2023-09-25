@@ -3,6 +3,7 @@ package jp.vmware.tanzu.socialwordcloud.ai_rag.rag;
 import jp.vmware.tanzu.socialwordcloud.ai_rag.record.VectorRecord;
 import org.springframework.ai.autoconfigure.openai.OpenAiProperties;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

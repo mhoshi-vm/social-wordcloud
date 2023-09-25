@@ -1,5 +1,6 @@
 package jp.vmware.tanzu.socialwordcloud.ai_rag.rag;
 
+import io.micrometer.observation.annotation.Observed;
 import jp.vmware.tanzu.socialwordcloud.ai_rag.client.MyOpenAiClient;
 import org.springframework.ai.client.AiResponse;
 import org.springframework.ai.client.Generation;
@@ -19,6 +20,7 @@ public class GenerateSummary {
 		this.myOpenAiClient = myOpenAiClient;
 	}
 
+	@Observed
 	public Generation getGeneration(String message, Message systemMessage, Integer maxTokens) {
 		UserMessage userMessage = new UserMessage(message);
 		Prompt prompt = new Prompt(List.of(systemMessage, userMessage));

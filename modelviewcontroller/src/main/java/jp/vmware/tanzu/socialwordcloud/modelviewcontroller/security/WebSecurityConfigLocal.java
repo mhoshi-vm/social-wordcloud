@@ -19,8 +19,8 @@ public class WebSecurityConfigLocal {
 			.permitAll())
 			.authorizeHttpRequests(authz -> authz.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
 				.permitAll()
-				.requestMatchers("/", "/app.js", "/api/**", "/built/**", "/access-denied", "/livez", "/readyz",
-						"/actuator/**", "/v3/api-docs")
+				.requestMatchers("/", "/app.js", "images/**", "/api/**", "/built/**", "/access-denied", "/livez",
+						"/readyz", "/actuator/**", "/v3/api-docs")
 				.permitAll()
 				.anyRequest()
 				.authenticated())

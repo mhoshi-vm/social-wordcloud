@@ -42,4 +42,5 @@ build/
 /stateless/src/main/resources/static/built/
 /modelviewcontroller/src/main/resources/static/built/
 /bindings/mastodon/access-token
-/wavefront/api-token
+/bindings/openai/api-key
+/bindings/wavefront/api-token

@@ -74,7 +74,7 @@ public class SocialMessageStreamService {
 		SocialMessage socialMessage = setSocialMessage(line);
 		List<SocialMessageImage> socialMessageImages = setImage(line);
 
-		if (socialMessage == null) {
+		if (socialMessage == null || socialMessage.getMessageId() == null) {
 			Thread.sleep(100);
 			return;
 		}

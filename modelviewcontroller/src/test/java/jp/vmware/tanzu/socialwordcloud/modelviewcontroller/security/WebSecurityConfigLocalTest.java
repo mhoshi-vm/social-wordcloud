@@ -1,5 +1,8 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.security;
 
+import jp.vmware.tanzu.socialwordcloud.ai_rag.controller.SimpleAiController;
+import jp.vmware.tanzu.socialwordcloud.ai_rag.rag.RetriveVectorTable;
+import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.RagController;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.SocialMessageMQController;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller.WebSocketEventController;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
@@ -41,6 +44,15 @@ class WebSecurityConfigLocalTest {
 
 	@MockBean
 	private WebSocketEventController webSocketEventController;
+
+	@MockBean
+	private RetriveVectorTable retriveVectorTable;
+
+	@MockBean
+	private RagController ragController;
+
+	@MockBean
+	private SimpleAiController simpleAiController;
 
 	@Test
 	void securityFilterChain() throws Exception {

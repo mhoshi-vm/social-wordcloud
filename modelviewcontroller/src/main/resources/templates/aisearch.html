@@ -8,9 +8,57 @@
     <!-- Required meta tags -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style type="text/css" th:src="@{images/Loading.gif}">
+        /* Style the buttons that are used to open and close the accordion panel */
+        .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+        }
 
+        /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+        .active, .accordion:hover {
+            background-color: #ccc;
+        }
+
+        /* Style the accordion panel. Note: hidden by default */
+        .panel {
+            padding: 0 18px;
+            background-color: white;
+            display: none;
+            overflow: hidden;
+        }
+
+        .accordion:after {
+            content: '\02795'; /* Unicode character for "plus" sign (+) */
+            font-size: 13px;
+            color: #777;
+            float: right;
+            margin-left: 5px;
+        }
+
+        .active:after {
+            content: "\2796"; /* Unicode character for "minus" sign (-) */
+        }
+
+        #loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.75) url(../static/images/Loading.gif) no-repeat center center;
+            z-index: 10000;
+        }
+    </style>
 </head>
 <body>
 
@@ -27,71 +75,85 @@
 
 
     <form method="get" th:action="@{/aisearch}">
-        <textarea style="width:70%" class="clr-textarea" th:name="message" >[[${message}]]</textarea>
+        <textarea style="width:50%" placeholder="Enter Question" class="clr-textarea" th:name="message" ></textarea>
         <button class="btn btn-info-outline" name="action" value="retrieve">retrieve</button>
         <button class="btn btn-info-outline" name="action" value="augment">augment</button>
         <button class="btn btn-info-outline" name="action" value="generate">generate</button>
+        <img src="../static/images/Loading.gif" th:src="@{images/Loading.gif}" id="gif" style="width: 30px; visibility: hidden">
     </form>
 </form>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<button class="accordion">Retrieve</button>
+<div class="panel">
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="left">ID</th>
+            <th class="left">Origin</th>
+            <th class="left">Text</th>
+            <th class="left">Username</th>
+            <th class="left">Created</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tweet: ${retrieve}">
+            <td class="left" th:text="${tweet.messageId}"></td>
+            <td class="left" th:text="${tweet.origin}"></td>
+            <td class="left" th:text="${tweet.context}"></td>
+            <td class="left" th:text="${tweet.username}"></td>
+            <td class="left" th:text="${tweet.createDateTime}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <br><br>
+</div>
 
-    <div class="accordion" id="accordionExample">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                    Retrieve
-                </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th class="left">ID</th>
-                            <th class="left">Origin</th>
-                            <th class="left">Text</th>
-                            <th class="left">Username</th>
-                            <th class="left">Created</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="tweet: ${retrieve}">
-                            <td class="left" th:text="${tweet.messageId}"></td>
-                            <td class="left" th:text="${tweet.origin}"></td>
-                            <td class="left" th:text="${tweet.context}"></td>
-                            <td class="left" th:text="${tweet.username}"></td>
-                            <td class="left" th:text="${tweet.createDateTime}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Augment
-                </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <span style="white-space: pre-line" th:text="${augment}"></span>
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingThree">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Generate
-                </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <span style="white-space: pre-line" th:text="${generate}"></span>
-                </div>
-            </div>
-        </div>
-    </div>
+<button class="accordion">Augment</button>
+<div class="panel">
+    <span style="white-space: pre-line" th:text="${augment}"></span>
+    <br><br>
+</div>
+
+<button class="accordion active" >Generate</button>
+<div class="panel" style="display: block">
+    <span style="white-space: pre-line" th:text="${generate}"></span>
+    <br><br>
+</div>
+
+<hr class="rounded">
+
+<div style="text-align: center;">
+    Concept Diagram of RAG ( Retrieval Augmented Generation )<br>
+    <img src="../static/images/RAG.png" th:src="@{images/RAG.png}" style="width: 50%; height: 50%;"  alt="RAG">
+</div>
+
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/bootstrap/dist/js/bootstrap.min.js"></script>
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            /* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel */
+            this.classList.toggle("active");
+
+            /* Toggle between hiding and showing the active panel */
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    $('form').submit(function() {
+        $('#gif').css('visibility', 'visible');
+        return true;
+    });
+</script>
 </body>
 </html>

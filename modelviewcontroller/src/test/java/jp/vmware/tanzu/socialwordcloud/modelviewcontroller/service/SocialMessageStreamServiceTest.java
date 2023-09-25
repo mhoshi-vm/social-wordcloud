@@ -1,5 +1,6 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service;
 
+import jp.vmware.tanzu.socialwordcloud.ai_rag.rag.RetriveVectorTable;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessageImage;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageImageReposity;
@@ -10,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +47,14 @@ class SocialMessageStreamServiceTest {
 	@Autowired
 	private SocialMessageImageReposity socialMessageImageReposity;
 
+	@Mock
+	public RetriveVectorTable retriveVectorTable;
+
 	@BeforeEach
 	void setup() {
 		this.socialMessageStreamService = new SocialMessageStreamService(socialMessageRepository,
-				socialMessageTextRepository, socialMessageImageReposity, morphologicalAnalysis, "ja", "postgres");
+				socialMessageTextRepository, socialMessageImageReposity, morphologicalAnalysis, retriveVectorTable,
+				"ja", "postgres");
 
 		this.spySocialMessageStreamService = Mockito.spy(socialMessageStreamService);
 

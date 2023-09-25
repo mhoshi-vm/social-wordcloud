@@ -1,4 +1,4 @@
-package jp.vmware.tanzu.socialwordcloud.library.utils;
+package jp.vmware.tanzu.socialwordcloud.library.servicebindings;
 
 import jp.vmware.tanzu.socialwordcloud.library.servicebindings.TwitterBindingsPropertiesProcessor;
 import jp.vmware.tanzu.socialwordcloud.library.test_utils.FluentMap;

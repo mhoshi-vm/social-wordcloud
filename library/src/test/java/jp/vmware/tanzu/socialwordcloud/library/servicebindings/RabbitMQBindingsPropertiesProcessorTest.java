@@ -1,6 +1,6 @@
-package jp.vmware.tanzu.socialwordcloud.library.utils;
+package jp.vmware.tanzu.socialwordcloud.library.servicebindings;
 
-import jp.vmware.tanzu.socialwordcloud.library.servicebindings.RedisEnabledViaBindings;
+import jp.vmware.tanzu.socialwordcloud.library.servicebindings.RabbitMQEnabledViaBindings;
 import jp.vmware.tanzu.socialwordcloud.library.test_utils.FluentMap;
 import org.assertj.core.api.MapAssert;
 import org.junit.jupiter.api.Test;
@@ -13,10 +13,10 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RedisBindingsPropertiesProcessorTest {
+class RabbitMQBindingsPropertiesProcessorTest {
 
 	private final Bindings bindings = new Bindings(new Binding("test-name", Paths.get("test-path"),
-			new FluentMap().withEntry(Binding.TYPE, RedisEnabledViaBindings.TYPE).withEntry("dummy", "dummy")));
+			new FluentMap().withEntry(Binding.TYPE, RabbitMQEnabledViaBindings.TYPE).withEntry("dummy", "dummy")));
 
 	private final MockEnvironment environment = new MockEnvironment();
 
@@ -24,9 +24,9 @@ class RedisBindingsPropertiesProcessorTest {
 
 	@Test
 	void test() {
-		new RedisEnabledViaBindings().process(environment, bindings, properties);
-		MapAssert<String, Object> stringObjectMapAssert = assertThat(properties)
-			.containsEntry("spring.session.store-type", "redis");
+		new RabbitMQEnabledViaBindings().process(environment, bindings, properties);
+		MapAssert<String, Object> stringObjectMapAssert = assertThat(properties).containsEntry("message.queue.enabled",
+				"true");
 	}
 
 }

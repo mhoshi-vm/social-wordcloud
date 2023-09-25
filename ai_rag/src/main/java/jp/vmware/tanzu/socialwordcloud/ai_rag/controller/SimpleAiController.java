@@ -52,7 +52,7 @@ public class SimpleAiController {
 	}
 
 	@PostMapping(value = "/generatesummary", consumes = { "application/json" })
-	public String generateSummray(@RequestBody Form form,
+	public String generateSummary(@RequestBody Form form,
 			@RequestParam(value = "tokens", defaultValue = "4000") Integer maxTokens) {
 		return generateSummary.getGeneration(form.message, augmentPrompt.getSystemMessage(form.documents), maxTokens)
 			.getText();
