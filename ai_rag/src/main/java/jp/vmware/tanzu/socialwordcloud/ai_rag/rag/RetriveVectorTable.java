@@ -38,16 +38,16 @@ public class RetriveVectorTable {
 
 	public void insertIntoDb(String messageId, String context) {
 
-		this.jdbcTemplate.update(
-				"INSERT INTO " + this.vectorTable + "(id, message_id, vector) VALUES (nextval('" + this.vectorTable+ "_seq'), ?, pgml.embed(?, ?))",
-				 messageId, this.embeddingModels, context);
+		this.jdbcTemplate.update("INSERT INTO " + this.vectorTable + "(id, message_id, vector) VALUES (nextval('"
+				+ this.vectorTable + "_seq'), ?, pgml.embed(?, ?))", messageId, this.embeddingModels, context);
 
 	}
 
 	public List<VectorRecord> semanticSearchListId(String prompt, Integer limit) {
 		VecordRecordMapper vecordRecordMapper = new VecordRecordMapper();
 		return this.jdbcTemplate.query(
-				"SELECT DISTINCT ON (distance) id, message_id, pgml.embed(?, ?)::vector <-> vector AS distance FROM " + this.vectorTable + " ORDER BY distance LIMIT ?",
+				"SELECT DISTINCT ON (distance) id, message_id, pgml.embed(?, ?)::vector <-> vector AS distance FROM "
+						+ this.vectorTable + " ORDER BY distance LIMIT ?",
 				vecordRecordMapper, this.embeddingModels, prompt, limit);
 	}
 
