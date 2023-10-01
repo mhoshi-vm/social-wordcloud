@@ -20,22 +20,6 @@ public class RetriveVectorTable {
 
 	public JdbcTemplate jdbcTemplate;
 
-	public enum PgDistanceType {
-
-		EuclideanDistance("<->", "vector_l2_ops"), NegativeInnerProduct("<#>", "vector_ip_ops"),
-		CosineDistance("<=>", "vector_cosine_ops");
-
-		public final String operator;
-
-		public final String index;
-
-		PgDistanceType(String operator, String index) {
-			this.operator = operator;
-			this.index = index;
-		}
-
-	}
-
 	public RetriveVectorTable(@Value("${openai.vector.table}") String vectorTable, JdbcTemplate jdbcTemplate,
 			OpenAiProperties openAiProperties) {
 		this.embeddingModels = openAiProperties.getEmbeddingModel();
@@ -63,8 +47,8 @@ public class RetriveVectorTable {
 	public List<VectorRecord> semanticSearchListId(String prompt, Integer limit) {
 		VecordRecordMapper vecordRecordMapper = new VecordRecordMapper();
 		return this.jdbcTemplate.query(
-				"SELECT DISTINCT ON (distance) id, message_id, pgml.embed('?', '?')::vector ? vector AS distance FROM ? ORDER BY distance LIMIT ?",
-				vecordRecordMapper, this.embeddingModels, prompt, PgDistanceType.EuclideanDistance, this.vectorTable,
+				"SELECT DISTINCT ON (distance) id, message_id, pgml.embed('?', '?')::vector <-> vector AS distance FROM ? ORDER BY distance LIMIT ?",
+				vecordRecordMapper, this.embeddingModels, prompt, this.vectorTable,
 				limit);
 	}
 
