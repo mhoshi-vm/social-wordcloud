@@ -118,7 +118,7 @@ public class WfServiceSpans {
 		return new SpanHandler() {
 			@Override
 			public boolean end(TraceContext traceContext, MutableSpan span, Cause cause) {
-				if (span.kind().name().equals("SERVER")) {
+				if (span.kind() != null & span.kind().name().equals("SERVER")) {
 					for (int i = 0; i < span.tagCount(); i++) {
 						if (span.tagKeyAt(i).startsWith("http.url")) {
 							span.tag("_inboundExternalService", inboundServiceType);
@@ -157,7 +157,7 @@ public class WfServiceSpans {
 			public boolean end(TraceContext traceContext, MutableSpan span, Cause cause) {
 				if (span.name().startsWith("handle-social-message")) {
 					span.kind(Span.Kind.CLIENT);
-					span.remoteServiceName("LLM");
+					span.remoteServiceName(socialOrigin);
 					span.tag("_outboundExternalService", socialOrigin);
 					span.tag("_externalApplication", appName);
 					span.tag("_externalComponent", socialOrigin);

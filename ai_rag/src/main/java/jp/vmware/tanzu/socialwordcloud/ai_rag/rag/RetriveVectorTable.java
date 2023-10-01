@@ -3,7 +3,6 @@ package jp.vmware.tanzu.socialwordcloud.ai_rag.rag;
 import jp.vmware.tanzu.socialwordcloud.ai_rag.record.VectorRecord;
 import org.springframework.ai.autoconfigure.openai.OpenAiProperties;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -55,16 +54,18 @@ public class RetriveVectorTable {
 
 	public void insertIntoDb(String messageId, String context) {
 
-		this.jdbcTemplate.execute("INSERT INTO " + vectorTable + "(id, message_id, vector) VALUES (nextval('"
-				+ vectorTable + "_seq'), " + messageId + ", pgml.embed('" + embeddingModels + "', '" + context + "'))");
+		this.jdbcTemplate.update(
+				"INSERT INTO ?(id, message_id, vector) VALUES (nextval('?_seq'), ?, pgml.embed('?', '?'))",
+				this.vectorTable, this.vectorTable, messageId, this.embeddingModels, context);
 
 	}
 
 	public List<VectorRecord> semanticSearchListId(String prompt, Integer limit) {
 		VecordRecordMapper vecordRecordMapper = new VecordRecordMapper();
-		return this.jdbcTemplate.query("SELECT DISTINCT ON (distance) id, message_id, pgml.embed('" + this.embeddingModels + "', '" + prompt
-				+ "')::vector " + PgDistanceType.EuclideanDistance.operator + " vector AS distance FROM "
-				+ this.vectorTable + " ORDER BY distance LIMIT " + limit, vecordRecordMapper);
+		return this.jdbcTemplate.query(
+				"SELECT DISTINCT ON (distance) id, message_id, pgml.embed('?', '?')::vector ? vector AS distance FROM ? ORDER BY distance LIMIT ?",
+				vecordRecordMapper, this.embeddingModels, prompt, PgDistanceType.EuclideanDistance, this.vectorTable,
+				limit);
 	}
 
 }
