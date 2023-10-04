@@ -118,7 +118,7 @@ public class WfServiceSpans {
 		return new SpanHandler() {
 			@Override
 			public boolean end(TraceContext traceContext, MutableSpan span, Cause cause) {
-				if (span.kind() != null & span.kind().name().equals("SERVER")) {
+				if (span.kind() != null && span.kind().name().equals("SERVER")) {
 					for (int i = 0; i < span.tagCount(); i++) {
 						if (span.tagKeyAt(i).startsWith("http.url")) {
 							span.tag("_inboundExternalService", inboundServiceType);
