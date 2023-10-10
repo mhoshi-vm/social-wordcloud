@@ -12,6 +12,7 @@ The following technologies are used.
 
 - Spring Boot
 - [Spring Cloud Bindings](https://github.com/spring-cloud/spring-cloud-bindings)
+- [Spring AI](https://github.com/spring-projects-experimental/spring-ai)
 - [Kuromoji](https://github.com/atilika/kuromoji)
 - [D3 Cloud](https://github.com/jasondavies/d3-cloud)
 - [Clarity UI](https://clarity.design/)
@@ -21,6 +22,7 @@ The following technologies are used.
 In addition, the following technologies are used for microservices mode
 - [Spring Security OAuth2.0](https://spring.io/guides/tutorials/spring-boot-oauth2/)
 - [Spring Cloud Sleuth](https://spring.io/projects/spring-cloud-sleuth)
+- [Greenplum](https://greenplum.org/)
 - [RabbitMQ](https://www.rabbitmq.com/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Redis](https://redis.io/)
