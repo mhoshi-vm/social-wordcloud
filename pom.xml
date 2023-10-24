@@ -19,7 +19,7 @@
         <spring-ai.version>0.2.0-SNAPSHOT</spring-ai.version>
         <spring-cloud-bindings.version>2.0.2</spring-cloud-bindings.version>
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
-        <wavefront.version>3.0.1</wavefront.version>
+        <wavefront.version>3.0.2</wavefront.version>
         <datasource-micrometer.version>1.0.2</datasource-micrometer.version>
         <twitter.sdk.version>2.0.3</twitter.sdk.version>
         <kuromoji.version>0.9.0</kuromoji.version>
