@@ -34,7 +34,7 @@
         <webjars-d3js.version>7.8.4</webjars-d3js.version>
         <webjars-d3cloud.version>1.2.5</webjars-d3cloud.version>
         <webjars-axios.version>1.6.8</webjars-axios.version>
-        <webjars-clr.version>4.0.1</webjars-clr.version>
+        <webjars-clr.version>16.0.3</webjars-clr.version>
         <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
         <install-node-and-npm.node.version>v18.13.0</install-node-and-npm.node.version>
         <install-node-and-npm.npm.version>8.19.3</install-node-and-npm.npm.version>
