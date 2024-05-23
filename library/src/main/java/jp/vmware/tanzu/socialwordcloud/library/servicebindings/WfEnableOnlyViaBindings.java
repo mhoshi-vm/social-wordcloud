@@ -16,6 +16,10 @@ public class WfEnableOnlyViaBindings implements BindingsPropertiesProcessor {
 	@Override
 	public void process(Environment environment, Bindings bindings, Map<String, Object> map) {
 
+		if (!environment.getProperty("jp.vmware.tanzu.bindings.boot.wavefront.enable", Boolean.class, true)) {
+			return;
+		}
+
 		List<Binding> wfBindings = bindings.filterBindings(TYPE);
 		if (wfBindings.size() == 0) {
 			map.put("management.endpoint.wavefront.enabled", "false");

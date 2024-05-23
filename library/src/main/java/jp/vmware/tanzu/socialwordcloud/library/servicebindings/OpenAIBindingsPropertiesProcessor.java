@@ -14,7 +14,7 @@ public class OpenAIBindingsPropertiesProcessor implements BindingsPropertiesProc
 
 	@Override
 	public void process(Environment environment, Bindings bindings, Map<String, Object> properties) {
-		if (!environment.getProperty("jp.vmware.tanzu.bindings.boot.twitter.enable", Boolean.class, true)) {
+		if (!environment.getProperty("jp.vmware.tanzu.bindings.boot.openai.enable", Boolean.class, true)) {
 			return;
 		}
 		List<Binding> myBindings = bindings.filterBindings(TYPE);
