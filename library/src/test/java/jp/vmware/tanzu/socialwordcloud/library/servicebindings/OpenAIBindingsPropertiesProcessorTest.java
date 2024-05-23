@@ -32,8 +32,8 @@ class OpenAIBindingsPropertiesProcessorTest {
 	void test() {
 		new OpenAIBindingsPropertiesProcessor().process(environment, bindings, properties);
 		assertThat(properties).containsEntry("spring.ai.openai.api-key", "dummy");
-		assertThat(properties).containsEntry("spring.ai.openai.embedding-model", "dummy-emb-model");
-		assertThat(properties).containsEntry("spring.ai.openai.model", "dummy-model");
+		assertThat(properties).containsEntry("spring.ai.openai.embedding.options.model", "dummy-emb-model");
+		assertThat(properties).containsEntry("spring.ai.openai.chat.options.model", "dummy-model");
 		assertThat(properties).containsEntry("spring.ai.openai.base-url", "http://dummy");
 		assertThat(properties).containsEntry("openai.vector.table", "dummy_table");
 	}
