@@ -84,14 +84,13 @@ public class RagController {
 	@GetMapping(value = "/aisearch", params = "action=generate")
 	@ConditionalOnProperty(value = "openai.vector.table")
 	public ModelAndView generate(@RequestParam(value = "message", defaultValue = "") String message,
-			@RequestParam(value = "limits", defaultValue = "10") Integer limits,
-			@RequestParam(value = "tokens", defaultValue = "3000") Integer maxTokens) {
+			@RequestParam(value = "limits", defaultValue = "10") Integer limits) {
 
 		ModelAndView mav = new ModelAndView("aisearch");
 
 		List<SocialMessage> socialMessages = retrieve(message, limits);
 		Message systemPrompt = augment(socialMessages);
-		Generation generation = generateSummary.getGeneration(message, systemPrompt, maxTokens);
+		Generation generation = generateSummary.getGeneration(message, systemPrompt);
 
 		mav.addObject("message", message);
 		mav.addObject("retrieve", socialMessages);
