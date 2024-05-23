@@ -1,8 +1,5 @@
-CREATE EXTENSION IF NOT EXISTS vector;
-
 CREATE SEQUENCE social_message_text_seq START WITH 100000 INCREMENT BY 50;
 CREATE SEQUENCE social_message_image_seq START WITH 1000 INCREMENT BY 50;
-CREATE SEQUENCE vector_db_seq START WITH 1 INCREMENT BY 50;
 
 CREATE TABLE IF NOT EXISTS social_message (
     message_id VARCHAR(255) NOT NULL,
@@ -28,11 +25,4 @@ CREATE TABLE IF NOT EXISTS social_message_image (
    message_id VARCHAR(255),
    image BYTEA,
    PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS public.vector_db (
-    id integer NOT NULL,
-    message_id VARCHAR(255),
-    vector VECTOR(384),
-    PRIMARY KEY (id)
 );
