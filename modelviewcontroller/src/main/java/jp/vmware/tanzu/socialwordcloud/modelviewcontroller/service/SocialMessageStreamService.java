@@ -82,8 +82,10 @@ public class SocialMessageStreamService {
 		logger.debug("Handling Tweet : " + socialMessage.getContext());
 
 		socialMessageRepository.save(socialMessage);
-		if (database.equals("greenplum")) {
-			socialMessageRepository.updateNegativeSentiment(socialMessage.getMessageId());
+		if (database.equals("greenplum") || database.equals("pgvector")) {
+			if (database.equals("greenplum")) {
+				socialMessageRepository.updateNegativeSentiment(socialMessage.getMessageId());
+			}
 			retriveVectorTable.insertIntoDb(socialMessage.getMessageId(), socialMessage.getContext());
 		}
 		socialMessageImageReposity.saveAll(socialMessageImages);
