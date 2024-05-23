@@ -23,9 +23,10 @@ public class OpenAIBindingsPropertiesProcessor implements BindingsPropertiesProc
 		}
 
 		properties.put("spring.ai.openai.api-key", myBindings.get(0).getSecret().get("api-key"));
-		properties.put("spring.ai.openai.model", myBindings.get(0).getSecret().get("model"));
+		properties.put("spring.ai.openai.chat.options.model", myBindings.get(0).getSecret().get("model"));
 		properties.put("spring.ai.openai.base-url", myBindings.get(0).getSecret().get("url"));
-		properties.put("spring.ai.openai.embedding-model", myBindings.get(0).getSecret().get("embedding-models"));
+		properties.put("spring.ai.openai.embedding.options.model",
+				myBindings.get(0).getSecret().get("embedding-models"));
 		properties.put("openai.vector.table", myBindings.get(0).getSecret().get("vector-table"));
 
 	}

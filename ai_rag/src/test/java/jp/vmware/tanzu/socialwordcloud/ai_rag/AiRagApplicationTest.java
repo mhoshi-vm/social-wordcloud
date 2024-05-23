@@ -1,10 +1,11 @@
-package jp.vmware.tanzu.socialwordcloud.standalone;
+package jp.vmware.tanzu.socialwordcloud.ai_rag;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.devtools.restart.RestartScope;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 import org.testcontainers.utility.DockerImageName;
@@ -12,8 +13,10 @@ import org.testcontainers.utility.DockerImageName;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @TestConfiguration(proxyBeanMethods = false)
-public class WordcloudApplicationTest {
+class AiRagApplicationTest {
 
 	@Bean
 	@RestartScope
@@ -31,7 +34,7 @@ public class WordcloudApplicationTest {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.from(WordcloudApplication::main).with(WordcloudApplicationTest.class).run(args);
+		SpringApplication.from(AiRagApplication::main).with(AiRagApplicationTest.class).run(args);
 	}
 
 }

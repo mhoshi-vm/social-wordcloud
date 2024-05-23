@@ -1,7 +1,7 @@
 package jp.vmware.tanzu.socialwordcloud.ai_rag.rag;
 
 import jp.vmware.tanzu.socialwordcloud.ai_rag.record.VectorRecord;
-import org.springframework.ai.autoconfigure.openai.OpenAiProperties;
+import org.springframework.ai.autoconfigure.openai.OpenAiEmbeddingProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,8 +21,8 @@ public class RetriveVectorTable {
 	public JdbcTemplate jdbcTemplate;
 
 	public RetriveVectorTable(@Value("${openai.vector.table}") String vectorTable, JdbcTemplate jdbcTemplate,
-			OpenAiProperties openAiProperties) {
-		this.embeddingModels = openAiProperties.getEmbeddingModel();
+			OpenAiEmbeddingProperties openAiProperties) {
+		this.embeddingModels = openAiProperties.getOptions().getModel();
 		this.jdbcTemplate = jdbcTemplate;
 		this.vectorTable = vectorTable;
 	}

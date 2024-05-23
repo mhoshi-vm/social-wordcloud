@@ -1,10 +1,10 @@
 package jp.vmware.tanzu.socialwordcloud.ai_rag.controller;
 
-import jp.vmware.tanzu.socialwordcloud.ai_rag.client.MyOpenAiClient;
 import jp.vmware.tanzu.socialwordcloud.ai_rag.rag.AugmentPrompt;
 import jp.vmware.tanzu.socialwordcloud.ai_rag.rag.GenerateSummary;
 import jp.vmware.tanzu.socialwordcloud.ai_rag.rag.RetriveVectorTable;
 import jp.vmware.tanzu.socialwordcloud.ai_rag.record.VectorRecord;
+import org.springframework.ai.openai.OpenAiChatClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class SimpleAiController {
 
-	private final MyOpenAiClient aiClient;
+	private final OpenAiChatClient aiClient;
 
 	public final RetriveVectorTable retriveVectorTable;
 
@@ -21,7 +21,7 @@ public class SimpleAiController {
 
 	public final GenerateSummary generateSummary;
 
-	public SimpleAiController(MyOpenAiClient aiClient, RetriveVectorTable retriveVectorTable,
+	public SimpleAiController(OpenAiChatClient aiClient, RetriveVectorTable retriveVectorTable,
 			AugmentPrompt augmentPrompt, GenerateSummary generateSummary) {
 		this.aiClient = aiClient;
 		this.retriveVectorTable = retriveVectorTable;
@@ -30,9 +30,8 @@ public class SimpleAiController {
 	}
 
 	@GetMapping("/aichat")
-	public Completion completion(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message,
-			@RequestParam(value = "tokens", defaultValue = "4000") Integer maxTokens) {
-		return new Completion(aiClient.generate(message, maxTokens));
+	public Completion completion(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
+		return new Completion(aiClient.call(message));
 	}
 
 	@GetMapping("/semanticsearch")
@@ -48,14 +47,14 @@ public class SimpleAiController {
 
 	@PostMapping(value = "/augmentprompt", consumes = { "application/json" })
 	public String setAugmentPrompt(@RequestBody List<String> documents) {
-		return augmentPrompt.getSystemMessage(documents).toString();
+		return augmentPrompt.getPrompt(documents).toString();
 	}
 
 	@PostMapping(value = "/generatesummary", consumes = { "application/json" })
-	public String generateSummary(@RequestBody Form form,
-			@RequestParam(value = "tokens", defaultValue = "4000") Integer maxTokens) {
-		return generateSummary.getGeneration(form.message, augmentPrompt.getSystemMessage(form.documents), maxTokens)
-			.getText();
+	public String generateSummary(@RequestBody Form form) {
+		return generateSummary.getGeneration(form.message, augmentPrompt.getPrompt(form.documents))
+			.getOutput()
+			.getContent();
 	}
 
 	public record Form(String message, List<String> documents) {

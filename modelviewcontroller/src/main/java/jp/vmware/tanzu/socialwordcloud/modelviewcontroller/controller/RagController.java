@@ -6,8 +6,9 @@ import jp.vmware.tanzu.socialwordcloud.ai_rag.rag.RetriveVectorTable;
 import jp.vmware.tanzu.socialwordcloud.ai_rag.record.VectorRecord;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.model.SocialMessage;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.repository.SocialMessageRepository;
-import org.springframework.ai.client.Generation;
-import org.springframework.ai.prompt.messages.Message;
+
+import org.springframework.ai.chat.Generation;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,7 +96,7 @@ public class RagController {
 		mav.addObject("message", message);
 		mav.addObject("retrieve", socialMessages);
 		mav.addObject("augment", systemPrompt.getContent());
-		mav.addObject("generate", generation.getText());
+		mav.addObject("generate", generation.getOutput().getContent());
 		return mav;
 	}
 
@@ -111,7 +112,7 @@ public class RagController {
 
 	private Message augment(List<SocialMessage> socialMessages) {
 		List<String> documents = socialMessages.stream().map(SocialMessage::getContext).collect(Collectors.toList());
-		return augmentPrompt.getSystemMessage(documents);
+		return augmentPrompt.getPrompt(documents);
 	}
 
 }

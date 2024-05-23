@@ -1,7 +1,7 @@
 package jp.vmware.tanzu.socialwordcloud.ai_rag.rag;
 
-import org.springframework.ai.prompt.SystemPromptTemplate;
-import org.springframework.ai.prompt.messages.Message;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class AugmentPrompt {
 		this.resource = resource;
 	}
 
-	public Message getSystemMessage(List<String> documents) {
+	public Message getPrompt(List<String> documents) {
 
 		SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(resource);
 		return systemPromptTemplate.createMessage(Map.of("documents", documents.toString()));

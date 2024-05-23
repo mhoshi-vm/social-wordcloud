@@ -22,14 +22,16 @@ public class PostgresEnabledViaBindings implements BindingsPropertiesProcessor {
 				map.put("database", "greenplum");
 				map.put("spring.sql.init.mode", "never");
 				map.put("db.instance", "Greenplum DB");
-			} else if (postgresBindings.get(0).getSecret().get("pgvector") !=null) {
+			}
+			else if (postgresBindings.get(0).getSecret().get("pgvector") != null) {
 				map.put("database", "pgvector");
-			} else {
+			}
+			else {
 				map.put("database", "postgres");
 			}
 		}
 		else {
-				map.put("database", "h2");
+			map.put("database", "h2");
 		}
 
 	}
