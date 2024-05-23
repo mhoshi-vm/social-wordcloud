@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### Ignore Twitter Bindings Secrets ###
-/bindings/twitter/bearer-token
+/nonused-bindings/twitter/bearer-token
 /package-lock.json
 /src/main/resources/static/built/
 /frontend-js/node_modules/
@@ -43,4 +43,4 @@ build/
 /modelviewcontroller/src/main/resources/static/built/
 /bindings/mastodon/access-token
 /bindings/openai/api-key
-/bindings/wavefront/api-token
+/nonused-bindings/wavefront/api-token
