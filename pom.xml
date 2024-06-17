@@ -26,7 +26,7 @@
         <jsoup.version>1.17.2</jsoup.version>
         <jsqlparser.version>4.9</jsqlparser.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
-        <spring-javaformat-maven-plugin.version>0.0.41</spring-javaformat-maven-plugin.version>
+        <spring-javaformat-maven-plugin.version>0.0.42</spring-javaformat-maven-plugin.version>
 
         <!-- Web dependencies -->
         <webjars-bootstrap.version>5.3.3</webjars-bootstrap.version>
