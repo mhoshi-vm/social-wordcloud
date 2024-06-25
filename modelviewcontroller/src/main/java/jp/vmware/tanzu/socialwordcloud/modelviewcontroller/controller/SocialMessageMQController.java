@@ -30,7 +30,7 @@ public class SocialMessageMQController {
 			}
 		}
 		catch (Exception e) {
-			logger.warn("Failed processing queue, but skipping");
+			logger.warn("Failed processing queue, but skipping:" + e);
 		}
 	}
 
