@@ -1,6 +1,5 @@
 package jp.vmware.tanzu.socialwordcloud.modelviewcontroller.controller;
 
-import io.micrometer.observation.annotation.Observed;
 import jp.vmware.tanzu.socialwordcloud.modelviewcontroller.service.SocialMessageStreamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,7 @@ public class SocialMessageMQController {
 	}
 
 	@RabbitListener(queues = "${message.queue.queue}")
-	public void tweetHandle(String tweet) throws InterruptedException {
+	public void tweetHandle(String tweet) {
 		logger.debug("Queue Received : " + tweet);
 		try {
 			if (!tweet.isEmpty()) {
@@ -41,7 +40,7 @@ public class SocialMessageMQController {
 			socialMessageStreamService.notifyTweetEvent(tweet);
 		}
 		catch (Exception e) {
-			logger.warn("Failed processing queue, but skipping");
+			logger.warn("Failed processing queue, but skipping:" + e);
 		}
 
 	}
