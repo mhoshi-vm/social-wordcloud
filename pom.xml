@@ -20,7 +20,7 @@
         <spring-cloud-bindings.version>2.0.3</spring-cloud-bindings.version>
         <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
         <wavefront.version>3.2.0</wavefront.version>
-        <datasource-micrometer.version>1.0.3</datasource-micrometer.version>
+        <datasource-micrometer.version>1.0.4</datasource-micrometer.version>
         <twitter.sdk.version>2.0.3</twitter.sdk.version>
         <kuromoji.version>0.9.0</kuromoji.version>
         <jsoup.version>1.17.2</jsoup.version>
