@@ -24,7 +24,7 @@
         <twitter.sdk.version>2.0.3</twitter.sdk.version>
         <kuromoji.version>0.9.0</kuromoji.version>
         <jsoup.version>1.17.2</jsoup.version>
-        <jsqlparser.version>4.9</jsqlparser.version>
+        <jsqlparser.version>5.0</jsqlparser.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
         <spring-javaformat-maven-plugin.version>0.0.42</spring-javaformat-maven-plugin.version>
 
