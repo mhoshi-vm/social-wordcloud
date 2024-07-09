@@ -77,13 +77,13 @@ public class WfServiceSpans {
 					if (span.tagKeyAt(i).startsWith("jdbc.query")) {
 						try {
 							statement = ccjSqlParserManager.parse(new StringReader(span.tagValueAt(i)));
-							logger.debug("Sending trace to table :" + tablesNamesFinder.getTableList(statement).get(0));
+							logger.debug("Sending trace to table :" + tablesNamesFinder.getTableList(statement).get(0).toString());
 						}
 						catch (JSQLParserException e) {
 							logger.warn("Unable to parse SQL");
 							return false;
 						}
-						span.tag("_outboundExternalService", tablesNamesFinder.getTableList(statement).get(0));
+						span.tag("_outboundExternalService", tablesNamesFinder.getTableList(statement).get(0).toString());
 						if (dbInstance.equals("Greenplum DB")) {
 							span.tag("_externalApplication", dbInstance);
 						}
