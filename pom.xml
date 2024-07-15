@@ -23,7 +23,7 @@
         <datasource-micrometer.version>1.0.5</datasource-micrometer.version>
         <twitter.sdk.version>2.0.3</twitter.sdk.version>
         <kuromoji.version>0.9.0</kuromoji.version>
-        <jsoup.version>1.17.2</jsoup.version>
+        <jsoup.version>1.18.1</jsoup.version>
         <jsqlparser.version>5.0</jsqlparser.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
         <spring-javaformat-maven-plugin.version>0.0.42</spring-javaformat-maven-plugin.version>
